@@ -1,0 +1,66 @@
+{
+        "jobName":"gateway",	
+	"cloud":{
+                "enable":"active",
+                "topic":["topic","topic2"],
+                "category":["publishTopic","jobTopic","offlineTopic","revert_topic"]
+                "status":["activate/deactivate"],
+                "task":"config"
+                "interval":"5000ms",
+                "QoS":[0],
+                "heartbeatInterval":"1000ms"
+            },
+    "node":{
+                "enable":"active",
+                "operation":"Read/Write",
+                "mac":["ff:11:22:33:44:ff"/all],              #all in the filter category
+                "filterType":"addr/name/companyId",
+                "filtervalue":"random/public/name/ibeacon/eddystone",
+                "service":["AC23BA"],
+                "char":["A1CB23"],
+                "data":["Active/Inactive"],
+                "topic":["topic"]
+            },
+    "db":{
+            "enable":"active",
+            "operation":"publishHistorical",   #create separate thread. only send success when thread ends
+            "topic":"topic",
+            "range":"",
+         },
+    "gateway":{
+                "enable":"active",
+                "operation":"Read/Write",
+                "scanWindow":"5000ms",
+                "deviceName":"aaa",
+                "deviceId":"111",
+                "deviceLocation":"ropar",
+                "deviceGroup":"301",
+                "topic":["topic"]
+                
+             }
+}
+
+
+
+#############################################################################
+JOBS:--
+
+
+Topic change---{"cloud":{"task":"config","topic":"{"topic1","topic2",...}","status":{"active","active",...}}}
+
+node read beacon data---{"node":{"operation":"read","mac":"ff:11:22:33:44:ff","service":"AC23BA","char":"A1CB23","topic":"topic"}}
+
+node write beacon data---{"node":{"operation":"write","mac":"ff:11:22:33:44:ff","service":"AC23BA","char":"A1CB23","data":"Active/Inactive"}}
+
+db read offline---{"db":{"table":"offline","range":"","topic":"topic"}}
+
+db read historical---{"db":{"table":"historical","range":"","topic":"topic"}}
+
+gateway read/write---{"gateway":{"operation":"Read/Write","component":"Scantime/devicename/C-Status/N-status/","value":""}}
+
+#############################################################################
+
+job=payload
+if job["node"]["enable"]=='active'
+  
+seperate thread for node and db
