@@ -24,6 +24,8 @@
 
 {% block content %}
 
+
+{%if type=="Offline Data"%}
 <div class="card" style="width:80%;">
     <div class="card-head", style="background-color:#d32d41;">
         {{type}}
@@ -61,6 +63,17 @@
         </table>
     </div>
 </div>
+{%else%}
+<div class="card" style="width:40%;">
+    <div class="card-content">
+        <center><h3>Select device for logging</h3></center>
+        {%for line in data%}
+        <p>{{line}}</p>
+        {%endfor%}
+    </div>
+</div>
+
+{%endif%}
 
 <script src="{{url_for('static',filename='js/jquery.js')}}"></script>
 <script src="{{url_for('static',filename='js/table2excel.js')}}"></script>

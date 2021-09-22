@@ -1,3 +1,3 @@
 from gdmApp import app
 
-app.run(debug=True,port=8006)
+app.run(debug=True,port=5000)

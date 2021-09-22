@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, session, url_for  #necessa
 import subprocess   #module import for dealing with execution of console command
 from gdmApp import app
 from .database import p1 as db
+import os
 
 path=(__file__).split('/')
 path.pop()
@@ -119,8 +120,13 @@ def reports():
 
 @app.route('/dataManager')
 def dataManager():
-    if 'logedIn' in session:
-        data=db.getdata('HistoricalData')
+    if 'logedIn' in session: 
+        os.system('lsblk -o mountpoint>withUsb.txt')
+        data=subprocess.Popen(['diff','withoutUsb.txt','withUsb.txt'],stdout=subprocess.PIPE).communicate()[0]      #executing the command and getting the data into string format
+        data=data.decode('utf-8')                                                       #decoding the binary the data into string
+        data=data.split('\n')[1::2]
+        if not data:
+            data.append("No device connected")
         return render_template('dataManager.html',data=data,type='Historical Data')
     return redirect(url_for('login'))
 
