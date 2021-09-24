@@ -1,0 +1,63 @@
+{%extends 'base.html'%}
+
+{%block pageHeading%}Run Command{%endblock%}
+
+{%block navBtns%}
+  <li ><a href="{{url_for('home')}}"><img class="icon" ><P>Dashboard</P></a></li>
+  <li ><a href="{{url_for('deviceConfig')}}"><img  class="icon" ><P>Device Config</P></a></li>
+  <li ><a href="{{url_for('cloudConfig')}}"><img class="icon"  ><P>Cloud Config</P></a></li>
+  <li ><a href="{{url_for('nodeConfig')}}"><img class="icon"  ><P>Node Config</P></a></li>
+  <li ><a href="{{url_for('networkConfig')}}"><img class="icon"  ><P>Network Config</P></a></li>
+  <li ><a href="{{url_for('dataManager')}}"><img class="icon"  ><P>Data Manager</P></a></li>
+  <li class="active"><a href="#"><img class="icon"  ><P>Debug</P></a></li>
+  <li ><a href="{{url_for('reports')}}"><img class="icon"  ><P>Reports</P></a></li>
+{%endblock%}
+
+{% block content %}
+
+<style>
+  #cmdSelectBox{
+    width:100%;
+    padding:5px;
+  }
+
+  #runCmdBtn{
+    margin-top:10px;
+    padding:3px 5px;
+    float:right;
+    letter-spacing:1px;
+  }
+</style>
+
+<div class="card">
+    <div class="card-head" style="background-color:#4da851">
+        Command Box
+    </div>
+    <div class="card-content">
+        <form class="cmdTakerForm" method="get">
+          <select  id="cmdSelectBox" name="cmd" >
+            <option value="0">Please select a command to run</option>
+            <option value="1">hciconfig</option>
+            <option value="2">btmgmt --index 0 info</option>
+            <option value="3">btmgmt --index 0 find -l</option>
+            <option value="4">systemctl status apache2</option>
+            <option value="5">systemctl status app</option>
+          </select>
+          <br>
+          <button type="submit" id="runCmdBtn" >Run</button>
+        </form>
+    </div>
+</div>
+
+{%if data%}
+  <div class="card" style="width:100%;margin-top:20px;padding-top:15px;">
+      <div class="card-content">
+          {%for line in data%}
+            <p>{{line}}</p>
+          {%endfor%}
+      </div>
+  </div>
+{%endif%}
+
+
+{% endblock%}

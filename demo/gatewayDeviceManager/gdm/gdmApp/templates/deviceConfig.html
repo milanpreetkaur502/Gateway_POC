@@ -1,0 +1,92 @@
+{%extends 'base.html'%}
+
+{%block pageHeading%}Device Configuration{%endblock%}
+
+{%block navBtns%}
+<li ><a href="{{url_for('home')}}"><img class="icon" ><P>Dashboard</P></a></li>
+<li class="active"><a href="#"><img  class="icon" ><P>Device Config</P></a></li>
+<li ><a href="{{url_for('cloudConfig')}}"><img class="icon"  ><P>Cloud Config</P></a></li>
+<li ><a href="{{url_for('nodeConfig')}}"><img class="icon"  ><P>Node Config</P></a></li>
+<li ><a href="{{url_for('networkConfig')}}"><img class="icon"  ><P>Network Config</P></a></li>
+<li ><a href="{{url_for('dataManager')}}"><img class="icon"  ><P>Data Manager</P></a></li>
+<li ><a href="{{url_for('debug')}}"><img class="icon"  ><P>Debug</P></a></li>
+<li ><a href="{{url_for('reports')}}"><img class="icon"  ><P>Reports</P></a></li>
+{%endblock%}
+
+{% block content %}
+
+<style>
+    #serverSelectBox{
+      width:100%;
+      padding:5px;
+    }
+  
+    .btnWrap button, #editBtn{
+      margin-top:10px;
+      padding:3px 8px;
+      float:right;
+      letter-spacing:1.5px;
+    } 
+    .btnWrap button{
+      margin-left: 10px;
+      color: white;
+      border: none;
+      box-shadow: 0px 1px 4px rgba(41, 41, 41, 0.568);
+    }
+    .content-container{
+      flex-direction: column;
+      align-items: center;
+      align-content: center;
+    }
+    input[type=text]{
+      width: 100%;
+      padding: 12px 20px;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+  </style>
+  
+  <div class="card" style="width:30%">
+    <div class="card-head" style="background-color:#0091D5;">
+        Device
+    </div>
+    <div class="card-content">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td><b>Device Name:</b></td>
+                    <td>Thunder-X</td>
+                </tr>
+                <tr>
+                    <td><b>Serial ID:</b></td>
+                    <td>45434345</td>
+                </tr>
+                <tr>
+                    <td><b>Node type:</b></td>
+                    <td>BLE</td>
+                </tr>
+                <tr>
+                    <td><b>Version:</b></td>
+                    <td>1.5</td>
+                </tr>
+                <tr>
+                    <td><b>Mac address:</b></td>
+                    <td>fff:fff:fff:fff</td>
+                </tr>
+                <tr>
+                    <td><b>Status:</b></td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td><b>IP address:</b></td>
+                    <td>192.168.43.381</td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" id="editBtn" >Edit</button>
+    </div>
+</div>
+   
+{% endblock%}

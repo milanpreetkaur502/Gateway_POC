@@ -1,0 +1,20 @@
+{%extends 'base.html'%}
+
+{%block pageHeading%}Reports{%endblock%}
+
+{%block navBtns%}
+<li ><a href="{{url_for('home')}}"><img class="icon" ><P>Dashboard</P></a></li>
+<li ><a href="{{url_for('deviceConfig')}}"><img  class="icon" ><P>Device Config</P></a></li>
+<li ><a href="{{url_for('cloudConfig')}}"><img class="icon"  ><P>Cloud Config</P></a></li>
+<li ><a href="{{url_for('nodeConfig')}}"><img class="icon"  ><P>Node Config</P></a></li>
+<li ><a href="{{url_for('networkConfig')}}"><img class="icon"  ><P>Network Config</P></a></li>
+<li ><a href="{{url_for('dataManager')}}"><img class="icon"  ><P>Data Manager</P></a></li>
+<li ><a href="{{url_for('debug')}}"><img class="icon"  ><P>Debug</P></a></li>
+<li class="active"><a href="#"><img class="icon"  ><P>Reports</P></a></li>
+{%endblock%}
+
+{% block content %}
+
+<h1>Reports</h1>
+
+{% endblock%}

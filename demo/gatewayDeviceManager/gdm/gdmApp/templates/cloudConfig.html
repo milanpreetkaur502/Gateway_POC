@@ -1,0 +1,203 @@
+{%extends 'base.html'%}
+
+{%block pageHeading%}Cloud Configurations{%endblock%}
+
+{%block navBtns%}
+<li ><a href="{{url_for('home')}}"><img class="icon" ><P>Dashboard</P></a></li>
+<li ><a href="{{url_for('deviceConfig')}}"><img  class="icon" ><P>Device Config</P></a></li>
+<li class="active" ><a href="#"><img class="icon"  ><P>Cloud Config</P></a></li>
+<li ><a href="{{url_for('nodeConfig')}}"><img class="icon"  ><P>Node Config</P></a></li>
+<li ><a href="{{url_for('networkConfig')}}"><img class="icon"  ><P>Network Config</P></a></li>
+<li ><a href="{{url_for('dataManager')}}"><img class="icon"  ><P>Data Manager</P></a></li>
+<li ><a href="{{url_for('debug')}}"><img class="icon"  ><P>Debug</P></a></li>
+<li ><a href="{{url_for('reports')}}"><img class="icon"  ><P>Reports</P></a></li>
+{%endblock%}
+
+{% block content %}
+
+<style>
+  #serverSelectBox, #statusSelectBox{
+    width:100%;
+    padding:5px;
+  }
+
+  .btnWrap button, .editBtn{
+    margin-top:10px;
+    padding:3px 8px;
+    float:right;
+    letter-spacing:1.5px;
+  } 
+  .btnWrap button{
+    margin-left: 10px;
+    color: white;
+    border: none;
+    box-shadow: 0px 1px 4px rgba(41, 41, 41, 0.568);
+  }
+  .content-container{
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+  }
+  input[type=text]{
+    width: 100%;
+    padding: 12px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+</style>
+
+
+<div class="card" id="showCard" style="width:50%">
+  <div class="card-content">
+      <table style="width: 100%;">
+          <tbody>
+            <tr>
+              <td><b>Server:</b></td>
+              <td>{{cloudData.server}}</td>
+            </tr>
+            <tr>
+                <td><b>Protocol:</b></td>
+                <td>MQTT</td>
+            </tr>
+            <tr>
+                <td><b>Type:</b></td>
+                <td>{{cloudData.serverType}}</td>
+            </tr>
+            <tr>
+                <td><b>Host address:</b></td>
+                <td>{{cloudData.hostAdd}}</td>
+            </tr>
+            <tr>
+                <td><b>Port:</b></td>
+                <td>{{cloudData.port}}</td>
+            </tr>
+            <tr>
+              <td><b>Status:</b></td>
+              <td>{{cloudData.status}}</td>
+          </tr>
+          <tr>
+            <td><b>Topic:</b></td>
+            <td>{{cloudData.topic}}</td>
+        </tr>
+        <tr>
+            <td><b>PUBFlag:</b></td>
+            <td>{{cloudData.pubFlag}}</td>
+        </tr>
+          </tbody>
+      </table>
+      <button type="button" onclick="showServerSelect()" class="editBtn"  >Server settings</button>
+      <button type="button" onclick="showStatusSelect()"  class="editBtn" style="margin-right: 10px;" >Change status</button>
+    </div>
+</div>
+
+<div class="card" id="statusSelect" style="display:none;width:30%">
+  <div class="card-content">
+    <form method="post">
+      <table style="width: 100%;">
+          <tbody id="tableBody">
+              <tr>
+                  <td><b>Status:</b></td>
+                  <td><select name="status" id="statusSelectBox">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select></td>
+              </tr>
+          </tbody>
+      </table>
+      <div class="btnWrap" id="cancelContBtnWrap">
+        <button style="background-color:#d32d41;" onclick="cancelConfig()" type="button">Cancel</button> <button style="background-color:#4da851"  type="submit">Change</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card" id="serverSelect" style="display:none;width:30%">
+  <div class="card-content">
+      <table style="width: 100%;">
+          <tbody id="tableBody">
+              <tr>
+                  <td><b>Server:</b></td>
+                  <td><select name="server" id="serverSelectBox">
+                    <option value="0">AWS</option>
+                    <option value="1">Custom</option>
+                  </select></td>
+              </tr>
+          </tbody>
+      </table>
+      <div class="btnWrap" id="cancelContBtnWrap">
+        <button style="background-color:#d32d41;" onclick="cancelConfig()" type="button">Cancel</button> <button style="background-color:#4da851" onclick="afterServerSelection()" type="button">Continue</button>
+      </div>
+  </div>
+</div>
+
+<div class="card" id="awsForm" style="margin-top:20px; display:none;width:50%">
+  <div class="card-content">
+    <form action="" method="post" enctype="multipart/form-data" >
+      <input type="hidden" name="server" value="aws">
+      <table style="width: 100%;">
+          <tbody id="tableBody">
+            <tr>
+                <td><b>Protocol:</b></td>
+                <td>MQTT</td>
+            </tr>
+            <tr>
+              <td><b>Host address:</b></td>
+              <td><input type="text" placeholder="Please enter Host address" name="hostAdd" required></td>
+            </tr>
+          <tr>
+            <td><b>Port:</b></td>
+            <td><input type="text" placeholder="Please enter the port" name="port" required></td>
+          </tr>
+          <tr>
+            <td><b>Root file:</b></td>
+            <td><input type="file" name="rootFile"  required></td>
+          </tr>
+          <tr>
+            <td><b>Private key:</b></td>
+            <td><input type="file" name="pvtKey" required ></td>
+          </tr>
+          <tr>
+            <td><b>IOT certificate:</b></td>
+            <td><input type="file" name="iotCert"  required></td>
+          </tr>
+          </tbody>
+      </table>
+      <div class="btnWrap">
+        <button style="background-color:#d32d41;" onclick="resetConfig()" type="button">Cancel</button> <button style="background-color:#4da851" type="submit">Connect</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card" id="customForm" style="margin-top:20px; display:none;width:50%">
+  <div class="card-content">
+    <form method="post">
+      <input type="hidden" name="server" value="custom">
+      <table style="width: 100%;">
+          <tbody id="tableBody">
+            <tr>
+                <td><b>Protocol:</b></td>
+                <td>MQTT</td>
+            </tr>
+            <tr>
+              <td><b>Host address:</b></td>
+              <td><input required type="text" placeholder="Please enter Host address" name="hostAdd"></td>
+            </tr>
+          <tr>
+            <td><b>Port:</b></td>
+            <td><input required type="text" placeholder="Please enter the port" name="port"></td>
+          </tr>
+          </tbody>
+      </table>
+      <div class="btnWrap">
+        <button style="background-color:#d32d41;" onclick="resetConfig()" type="button">Cancel</button> <button style="background-color:#4da851" type="submit">Connect</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript" src="{{url_for('static',filename='js/cloudConfig.js')}}"></script>
+
+{% endblock%}

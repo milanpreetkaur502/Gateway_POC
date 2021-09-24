@@ -26,7 +26,7 @@ private_key = path+'key.pem.key'
 
 connflag = False
 connbflag = False  #bad connection flag
-pubflag = True
+pubflag = False
 awstopic="thing/1100/data"
 #from database
 port = 8883
@@ -69,7 +69,7 @@ def on_General(client,obj,msg):
 
 
 def funInitilise(client,SERVER_TYPE,HOST,PORT):
-    print(SERVER_TYPE)
+
     client.on_connect = onConnect
     #client.on_disconnect = onDisconnect
     #client.on_publish = on_publish
@@ -112,7 +112,7 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
     sys_type="Gateway"
     dev_type="Beacon"
     #Sdev_id="FF:00:00:FF:AA:BB"
-
+    sensor="Accelerometer"
 
 
     t_utc = dt.get('t_utc')
@@ -120,9 +120,9 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
     mac=dt.get('MAC')
     rssi=dt.get('RSSI')
     mactype=dt.get('MACTYPE')
-    value = dt.get('value')
-    sensorType = dt.get('sensorType')
-
+    x = dt.get('x')
+    y = dt.get('y')
+    z = dt.get('z')
 
     msg = {
 	    "Name": name,
@@ -133,9 +133,10 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
 	    "DeviceID":mac,
 	    "TimestampUTC": str(t_utc),
 	    "Timestamp": str(t_stmp),
-	    "Sensor":sensorType,
-	    "Value":str(value)
-
+	    "Sensor":sensor,
+	    "X-axis":str(x),
+	    "Y-axis":str(y),
+	    "Z-axis":str(z)
 		}
 
     #time.sleep(5)
@@ -148,10 +149,9 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
         try:
             requests.head('http://www.google.com/', timeout=3)
             data=json.dumps(msg)
-            rt = client.publish(topic,data,qos=2)
+            rt = client.publish(topic,data,qos=1)
             print("Publishing Data...", rt)
-            print(sensorType,value)
-            mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
+            mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,'1M','off',str(x),str(y),str(z),t_utc),'source':'cloud'})
 
             return True
 
@@ -160,4 +160,4 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
             return False
     else:
         print("waiting...")
-        mainBuffer['dbCmnd'].append({'table':'OfflineData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
+        mainBuffer['dbCmnd'].append({'table':'OfflineData','operation':'write','value':('1',mac,rssi,'1M','off',str(x),str(y),str(z),t_utc),'source':'cloud'})
