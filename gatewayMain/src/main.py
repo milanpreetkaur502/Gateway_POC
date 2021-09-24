@@ -82,7 +82,7 @@ def cloud():
                     publishData(client,dt,TOPIC,'True',mainBuffer,SERVER_TYPE)
                 elif SERVER_TYPE == 'aws':
                     publishData(client,dt,TOPIC,PUBFLAG,mainBuffer,SERVER_TYPE)
-        time.sleep(0.01)
+        time.sleep(0.25)
 
 def dbMaster():
     print("DB Started")

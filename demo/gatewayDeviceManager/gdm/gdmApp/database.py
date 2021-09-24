@@ -11,7 +11,7 @@ class tables():
         print("table created")
 
     def __init__(self):
-        self.conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/gatewayMain/src/mydatabasenew.db',check_same_thread=False)
+        self.conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/demo/gatewayMain/src/mydatabasenew.db',check_same_thread=False)
         # self.conn = sqlite3.connect('/home/attu/Desktop/mydatabasenew.db',check_same_thread=False)
         try:
             self.conn.execute('select * from Cloud')

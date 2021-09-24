@@ -89,7 +89,7 @@ class tables():
     def callputdata(self):
         self.putdata('Device', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', 'Active'))
         self.putdata('Cloud', ('1','aws', 'a3qvnhplljfvjr-ats.iot.us-west-2.amazonaws.com', '8883', 'Active','beacon','True'))
-        self.putdata('Node', ('1' ,'3', 'Active', 'Active'))
+        self.putdata('Node', ('1' ,'6', 'Active', 'Active'))
         #self.putdata('HistoricalData', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', '20' , '20' , '20' ,'2021-09-03'))
         #self.putdata('OfflineData', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', '20' , '20' , '20' ,'2021-09-03'))
 
