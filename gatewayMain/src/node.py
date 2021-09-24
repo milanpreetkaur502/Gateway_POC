@@ -41,22 +41,31 @@ def app_node(SCAN_TIME):
         payload=[]
         for dev in devices:
             dev_name=dev.getValueText(9)
-            #if dev_name=='Tag':
-            man=dev.getValueText(255)#beacon manufacture data
-            try:
-                z=man[14:16] + man[12:14]
-                y=man[10:12] + man[8:10]
-                x=man[6:8] + man[4:6]
-                x=hextodec(int(x, 16))*0.00245
-                y=hextodec(int(y, 16))*0.00245
-                z=hextodec(int(z, 16))*0.00245
-
-                now=datetime.now()
-                xx={'TYPE':'Beacon','MAC':dev.addr,'MACTYPE':dev.addrType,'RSSI':dev.rssi,'Accelerometer(x)':x,'Accelerometer(y)':y,'Accelerometer(z)':z,'Timestamp':int(datetime.timestamp(now))}
-                for i in range(100):
+            if dev_name=='Tag':
+                man=dev.getValueText(255)#beacon manufacture data
+                try:
+                    #z=man[14:16] + man[12:14]
+                    #y=man[10:12] + man[8:10]
+                    #x=man[6:8] + man[4:6]
+                    #x=hextodec(int(x, 16))*0.00245
+                    #y=hextodec(int(y, 16))*0.00245
+                    #z=hextodec(int(z, 16))*0.00245
+                    type='Accelerometer'
+                    now=datetime.now()
+                    xx={'TYPE':'Beacon','MAC':dev.addr,'MACTYPE':dev.addrType,'RSSI':dev.rssi,'value':man,'sensorType':type,'Timestamp':int(datetime.timestamp(now))}
                     payload.append(xx)
-            except:
-                pass
+                except:
+                    pass
+
+            if dev_name=='TEMP':
+                man=dev.getValueText(255)#beacon manufacture data
+                try:
+                    type='Temperature'
+                    now=datetime.now()
+                    xx={'TYPE':'Beacon','MAC':dev.addr,'MACTYPE':dev.addrType,'RSSI':dev.rssi,'value':man,'sensorType':type,'Timestamp':int(datetime.timestamp(now))}
+                    payload.append(xx)
+                except:
+                    pass
 
         SCAN_STATUS='Inactive'
         return payload

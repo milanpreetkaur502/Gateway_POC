@@ -71,9 +71,8 @@ def cloud():
                 now=datetime.now()
                 dt = {'t_stmp' : int(datetime.timestamp(now)),
                     't_utc' : now.strftime("%d/%m/%Y, %H:%M:%S"),
-                    'x' : dev['Accelerometer(x)'],
-                    'y' : dev['Accelerometer(y)'],
-                    'z' : dev['Accelerometer(z)'],
+                    'value' : dev['value'],
+                    'sensorType' : dev['sensorType'],
                     'MAC' : dev['MAC'],
                     'MACTYPE' : dev['MACTYPE'],
                     'RSSI' : dev['RSSI']
@@ -162,7 +161,7 @@ def nodeMaster():
         time.sleep(1)
 
 def main():
-    
+
     mainBuffer={'cloud':deque([]),'monitor':deque([]),'dbCmnd':deque([]),'nodeCmnd':deque([])}
 
     #-------------------- GLOBAL VARIABLES  ------------------------------------------------------------
@@ -282,5 +281,3 @@ if __name__=='__main__':
             print("-"*20)
         time.sleep(1)
     #-------------------------------------------------------------------------------------------------
-
-
