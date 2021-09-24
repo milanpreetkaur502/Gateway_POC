@@ -9,7 +9,7 @@ path.pop()
 path.pop()
 path.pop()
 path="/".join(path)
-path=path+'/certUploads/'
+path=path+'/certUploads/' 
 
 
 @app.route('/login',methods=['GET','POST'])   #route for handling login
@@ -121,12 +121,7 @@ def reports():
 @app.route('/dataManager')
 def dataManager():
     if 'logedIn' in session: 
-        os.system('lsblk -o mountpoint>withUsb.txt')
-        data=subprocess.Popen(['diff','withoutUsb.txt','withUsb.txt'],stdout=subprocess.PIPE).communicate()[0]      #executing the command and getting the data into string format
-        data=data.decode('utf-8')                                                       #decoding the binary the data into string
-        data=data.split('\n')[1::2]
-        if not data:
-            data.append("No device connected")
+        data=db.getdata('HistoricalData')
         return render_template('dataManager.html',data=data,type='Historical Data')
     return redirect(url_for('login'))
 

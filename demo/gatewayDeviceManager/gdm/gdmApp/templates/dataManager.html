@@ -18,7 +18,6 @@
 <li ><a href="{{url_for('networkConfig')}}"><img class="icon"  ><P>Network Config</P></a></li>
 <li class="active"><a href="#"><img class="icon"  ><P>Data Manager</P></a></li>
 <li ><a href="{{url_for('debug')}}"><img class="icon"  ><P>Debug</P></a></li>
-<li ><a href="{{url_for('reports')}}"><img class="icon"  ><P>Reports</P></a></li>
 {%endblock%}
 
 
@@ -37,11 +36,8 @@
                     <th>ID</th>
                     <th>MAC address</th>
                     <th>RSSI</th>
-                    <th>PHY config</th>
-                    <th>Config</th>
-                    <th>Accelerometer(X)</th>
-                    <th>Accelerometer(Y)</th>
-                    <th>Accelerometer(Z)</th>
+                    <th>Value</th>
+                    <th>Sensor Type</th>
                     <th>Time Stamp</th>
                 </tr>
             </thead>
@@ -54,9 +50,6 @@
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
-                    <td>{{row[6]}}</td>
-                    <td>{{row[7]}}</td>
-                    <td>{{row[8]}}</td>
                 </tr>
                 {%endfor%}
             </tbody>
@@ -64,15 +57,37 @@
     </div>
 </div>
 {%else%}
-<div class="card" style="width:40%;">
+<div class="card" style="width:80%;">
+    <div class="card-head", style="background-color:#d32d41;">
+        {{type}}
+    </div>
     <div class="card-content">
-        <center><h3>Select device for logging</h3></center>
-        {%for line in data%}
-        <p>{{line}}</p>
-        {%endfor%}
+        <table style="width: 100%;" id="table2excel">
+            <thead style="color: #4da851;">
+                <tr>
+                    <th>ID</th>
+                    <th>MAC address</th>
+                    <th>RSSI</th>
+                    <th>Value</th>
+                    <th>Sensor Type</th>
+                    <th>Time Stamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data%}
+                <tr>
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
     </div>
 </div>
-
 {%endif%}
 
 <script src="{{url_for('static',filename='js/jquery.js')}}"></script>
