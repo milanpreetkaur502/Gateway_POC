@@ -148,7 +148,11 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
         try:
             requests.head('http://www.google.com/', timeout=3)
             data=json.dumps(msg)
-            rt = client.publish(topic,data,qos=2)
+            if sensorType=='Accelerometer':
+                topic=topic+'/acc'
+            elif sensorType=='Temperature':
+                topic=topic+'/temp'
+            rt = client.publish(topic,data,qos=0)
             print("Publishing Data...", rt)
             print(sensorType,value)
             mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
