@@ -10,7 +10,11 @@ path.pop()
 path.pop()
 path="/".join(path)
 path=path+'/certUploads/' 
-
+ip=""
+try:
+    ip=os.popen('ip addr show eth1').read().split("inet ")[1].split("/")[0]
+except:
+    ip='Retrieving'
 
 @app.route('/login',methods=['GET','POST'])   #route for handling login
 def login():
@@ -40,13 +44,13 @@ def home():
         else:
             serverType='Secured'
         cloudData={'server':server,'serverType':serverType,'hostAdd':cloudData[0][2],'port':cloudData[0][3],'status':cloudData[0][4],'topic':cloudData[0][5],'pubFlag':cloudData[0][6]}
-        return render_template('home.html',nodeData=nodeData,cloudData=cloudData)
+        return render_template('home.html',nodeData=nodeData,cloudData=cloudData,deviceData=ip)
     return redirect(url_for('login'))
 
 @app.route('/deviceConfig')
 def deviceConfig():
     if 'logedIn' in session:
-        return render_template('deviceConfig.html')
+        return render_template('deviceConfig.html',deviceData=ip)
     return redirect(url_for('login'))
 
 @app.route('/cloudConfig',methods=['GET','POST'])
