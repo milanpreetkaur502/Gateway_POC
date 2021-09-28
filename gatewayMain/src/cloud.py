@@ -69,7 +69,6 @@ def on_General(client,obj,msg):
 
 
 def funInitilise(client,SERVER_TYPE,HOST,PORT):
-    print(SERVER_TYPE)
     client.on_connect = onConnect
     #client.on_disconnect = onDisconnect
     #client.on_publish = on_publish
@@ -80,7 +79,7 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
 
 # when the connection attempt failed it show "connection failed message"
         try:
-            if int(PORT) == 8883:
+            if PORT == 8883:
                 client.tls_set(root_ca,
                     certfile = public_crt,
                     keyfile = private_key,
@@ -88,26 +87,25 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
                     tls_version = ssl.PROTOCOL_TLSv1_2,
                     ciphers = None)
 
-                client.connect(HOST, port = int(PORT), keepalive=60)
+                client.connect(HOST, port = PORT, keepalive=60)
 
-            elif int(PORT) == 443:
+            elif PORT == 443:
                 ssl_context = ssl.create_default_context()
                 ssl_context.set_alpn_protocols([IoT_protocol_name])
                 ssl_context.load_verify_locations(cafile=root_ca)
                 ssl_context.load_cert_chain(certfile=public_crt, keyfile=private_key)
 
                 client.tls_set_context(context = ssl_context)
-                client.connect(HOST, port = int(PORT), keepalive=60)
+                client.connect(HOST, port = PORT, keepalive=60)
         except:
             print("Connection failed! Please try again...")
             exit(1)
 
-def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
-    topic=t
+def publishData(client, dt,topic,pubflag,SERVER_TYPE):
+
     if SERVER_TYPE == 'custom':
         topic = 'Msg'
         #"thing/1100/data"
-
     name= "BLE Gateway"
     sys_type="Gateway"
     dev_type="Beacon"
@@ -139,9 +137,8 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
 	    "Z-axis":str(z)
 		}
 
-    #time.sleep(5)
-    #print(connflag)
-    print('connflag',connflag,'pubflag',pubflag)
+    
+    # print('connflag',connflag,'pubflag',pubflag)
     if connflag == True and pubflag == 'True' and topic!='':
         print("Actually started")
 
