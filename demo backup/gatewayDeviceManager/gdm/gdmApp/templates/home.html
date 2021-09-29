@@ -1,0 +1,134 @@
+{%extends 'base.html'%}
+
+{%block pageHeading%}Dashboard{%endblock%}
+
+{%block navBtns%}
+<li class="active"><a href="#"><img class="icon" ><P>Dashboard</P></a></li>
+<li ><a href="{{url_for('deviceConfig')}}"><img  class="icon" ><P>Device Config</P></a></li>
+<li ><a href="{{url_for('cloudConfig')}}"><img class="icon"  ><P>Cloud Config</P></a></li>
+<li ><a href="{{url_for('nodeConfig')}}"><img class="icon"  ><P>Node Config</P></a></li>
+<li ><a href="{{url_for('networkConfig')}}"><img class="icon"  ><P>Network Config</P></a></li>
+<li ><a href="{{url_for('dataManager')}}"><img class="icon"  ><P>Data Manager</P></a></li>
+<li ><a href="{{url_for('debug')}}"><img class="icon"  ><P>Debug</P></a></li>
+{%endblock%}
+
+{% block content %}
+
+<div class="card" style="width:30%;">
+    <div class="card-head", style="background-color:#d32d41;">
+        Node
+    </div>
+    <div class="card-content">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td><b>Type:</b></td>
+                    <td>BLE</td>
+                </tr>
+                <tr>
+                    <td><b>Category:</b></td>
+                    <td>iBeacon</td>
+                </tr>
+                <tr>
+                    <td><b>Count:</b></td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td><b>Scan rate:</b></td>
+                    <td>{{nodeData.scanRate}}</td>
+                </tr>
+                <tr>
+                    <td><b>Status:</b></td>
+                    <td>{{nodeData.status}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card" style="width:30%">
+    <div class="card-head">
+        Cloud
+    </div>
+    <div class="card-content">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td><b>Server:</b></td>
+                    <td>{{cloudData.server}}</td>
+                </tr>
+                <tr>
+                    <td><b>Protocol:</b></td>
+                    <td>MQTT</td>
+                </tr>
+                <tr>
+                    <td><b>Type:</b></td>
+                    <td>{{cloudData.serverType}}</td>
+                </tr>
+                <tr>
+                    <td><b>Host address:</b></td>
+                    <td>{{cloudData.hostAdd}}</td>
+                </tr>
+                <tr>
+                    <td><b>Port:</b></td>
+                    <td>{{cloudData.port}}</td>
+                </tr>
+                <tr>
+                    <td><b>Status:</b></td>
+                    <td>{{cloudData.status}}</td>
+                </tr>
+                <tr>
+                    <td><b>Topic:</b></td>
+                    <td>{{cloudData.topic}}</td>
+                </tr>
+                <tr>
+                    <td><b>PUBFlag:</b></td>
+                    <td>{{cloudData.pubFlag}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card" style="width:30%">
+    <div class="card-head" style="background-color:#0091D5;">
+        Device
+    </div>
+    <div class="card-content">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td><b>Device Name:</b></td>
+                    <td>Thunder-X</td>
+                </tr>
+                <tr>
+                    <td><b>Serial ID:</b></td>
+                    <td>45434345</td>
+                </tr>
+                <tr>
+                    <td><b>Node type:</b></td>
+                    <td>BLE</td>
+                </tr>
+                <tr>
+                    <td><b>Mac address:</b></td>
+                    <td>fff:fff:fff:fff</td>
+                </tr>
+                <tr>
+                    <td><b>IP address:</b></td>
+                    <td>{{deviceData}}</td>
+                </tr>
+                <tr>
+                    <td><b>Version:</b></td>
+                    <td>1.5</td>
+                </tr>
+                <tr>
+                    <td><b>Status:</b></td>
+                    <td>Active</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock%}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScratchNest-Login</title>
+  <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet"><link rel="stylesheet" href="{{url_for('static',filename='css/login.css')}}">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="container">
+  <div class="logocontainer" style="width: 50%;height:100%;padding-top:80px;">
+    <div class="logo">
+    </div>
+  </div>
+  <div class="formContainer" style="width: 50%;height:100%; background-color:#0EB6CB;">
+    <div class="msgClass">
+      {%if msg%}
+      <h1>{{msg}}</h1>
+      {%else%}
+      <h1>WELCOME</h1>
+      {%endif%}
+      <h2>Admin</h2>
+    </div>
+    <form class="login" method="POST">
+      <input type="text" name="user" required placeholder="User name">
+      <input type="password" placeholder="Password" name="pas" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- partial -->  
+</body>
+</html>

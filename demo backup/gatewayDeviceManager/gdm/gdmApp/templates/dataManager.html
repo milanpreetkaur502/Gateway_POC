@@ -1,0 +1,106 @@
+{%extends 'base.html'%}
+
+{%block pageHeading%}Data Manager{%endblock%}
+{%block headerBtns%} 
+    <button type="button" id="excelBtn">Download</button> 
+    {%if type!='Offline Data'%}
+    <a href="{{url_for('offlineData')}}"><button type="button" >Offline Data</button></a>
+    {%else%}
+    <a href="{{url_for('dataManager')}}"><button type="button" >Historical Data</button></a>
+    {%endif%}
+{%endblock%}
+
+{%block navBtns%}
+<li ><a href="{{url_for('home')}}"><img class="icon" ><P>Dashboard</P></a></li>
+<li ><a href="{{url_for('deviceConfig')}}"><img  class="icon" ><P>Device Config</P></a></li>
+<li ><a href="{{url_for('cloudConfig')}}"><img class="icon"  ><P>Cloud Config</P></a></li>
+<li ><a href="{{url_for('nodeConfig')}}"><img class="icon"  ><P>Node Config</P></a></li>
+<li ><a href="{{url_for('networkConfig')}}"><img class="icon"  ><P>Network Config</P></a></li>
+<li class="active"><a href="#"><img class="icon"  ><P>Data Manager</P></a></li>
+<li ><a href="{{url_for('debug')}}"><img class="icon"  ><P>Debug</P></a></li>
+{%endblock%}
+
+
+{% block content %}
+
+
+{%if type=="Offline Data"%}
+<div class="card" style="width:80%;">
+    <div class="card-head", style="background-color:#d32d41;">
+        {{type}}
+    </div>
+    <div class="card-content">
+        <table style="width: 100%;" id="table2excel">
+            <thead style="color: #4da851;">
+                <tr>
+                    <th>ID</th>
+                    <th>MAC address</th>
+                    <th>RSSI</th>
+                    <th>Value</th>
+                    <th>Sensor Type</th>
+                    <th>Time Stamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data%}
+                <tr>
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%else%}
+<div class="card" style="width:80%;">
+    <div class="card-head", style="background-color:#d32d41;">
+        {{type}}
+    </div>
+    <div class="card-content">
+        <table style="width: 100%;" id="table2excel">
+            <thead style="color: #4da851;">
+                <tr>
+                    <th>ID</th>
+                    <th>MAC address</th>
+                    <th>RSSI</th>
+                    <th>Value</th>
+                    <th>Sensor Type</th>
+                    <th>Time Stamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data%}
+                <tr>
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%endif%}
+
+<script src="{{url_for('static',filename='js/jquery.js')}}"></script>
+<script src="{{url_for('static',filename='js/table2excel.js')}}"></script>
+<script type="text/javascript">
+    $("#excelBtn").click(function(){
+      $("#table2excel").table2excel({
+    // exclude CSS class
+    exclude: ".noExl",
+    name: "Worksheet Name",
+    filename: "histData", //do not include extension
+    fileext: ".xls" // file extension
+  });
+});
+  </script>
+{% endblock%}

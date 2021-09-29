@@ -1,0 +1,48 @@
+{
+        "jobName":"gateway",	
+	"cloud":{
+                "enable":"active",
+                "topic":["topic","topic2","topic3","topic4","topic5"],
+                "category":["publishTopic","jobTopic","offlineTopic","logTopic","otaTopic"],
+                "status":["activate","activate","activate","activate","activate"],
+                "task":"configTopic",
+                "interval":"5000ms",
+                "QoS":[0],
+                "heartbeatInterval":"1000ms"
+            },
+    "node":{
+                "enable":"active",
+                "operation":"Read/Write",
+                "mac":["ff:11:22:33:44:ff"],             
+                "filterType":"addr",
+                "filtervalue":"random",
+                "service":["AC23BA"],
+                "char":["A1CB23"],
+                "data":["Active"],
+                "topic":["topic"]
+            },
+    "db":{
+            "enable":"active",
+            "operation":"publishHistorical", 
+            "topic":"topic",
+            "range":"",
+         },
+    "gateway":{
+                "enable":"active",
+                "operation":"Read/Write",
+                "scanWindow":"5000ms",
+                "deviceName":"aaa",
+                "deviceId":"111",
+                "deviceLocation":"ropar",
+                "deviceGroup":"301"
+                
+             },
+     "ota":{
+              "enable":"active",
+              "operation":"ota",
+              "deviceId":"1234",
+              "url":"8.8.8.8",
+              "appName":"cloud"
+            }
+}
+

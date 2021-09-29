@@ -3,9 +3,9 @@
 	"cloud":{
                 "enable":"active",
                 "topic":["topic","topic2"],
-                "category":["publishTopic","jobTopic","offlineTopic","revert_topic"]
+                "category":["publishTopic","jobTopic","offlineTopic","logTopic","otaTopic"]
                 "status":["activate/deactivate"],
-                "task":"config"
+                "task":"configTopic/configValue"
                 "interval":"5000ms",
                 "QoS":[0],
                 "heartbeatInterval":"1000ms"
@@ -37,6 +37,13 @@
                 "deviceGroup":"301"
                 
              }
+     "ota":{
+              "enable":"active",
+              "operation":"ota",
+              "deviceId":"1234",
+              "url":"8.8.8.8",
+              "appName":"cloud"
+            }
 }
 
 
