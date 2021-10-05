@@ -1,66 +1,11 @@
 from essentialImports import *
-from  ConfigHandler import ConfigHandler
+from  configHandler import ConfigHandler
 import time
 import threading
 
-def job(client,obj,msg):
-    # This callback will only be called for messages with topics that match
-    # $aws/things/Test_gateway/jobs/notify-next
-    print("Job callback")
-    print(str(msg.payload))
-    jobconfig = json.loads(msg.payload.decode('utf-8'))
-    t_job = threading.Thread(name='parse', target=parse,args=(jobconfig,client,mainBuffer,TOPIC))
-    t_job.start()
-
-def parse(jobconfig,client,mainBuffer,TOPIC):
-    if 'execution' in jobconfig:
-        jobid = jobconfig['execution']['jobId']
-        cat = jobconfig['execution']['jobDocument']['category']
-        operation = jobconfig['execution']['jobDocument']['operation']
-        cmd=jobconfig['execution']['jobDocument'][cat]
-
-        if cat=='cloud':
-            value=cmd['value']
-            task=cmd['task']
-        #led_config=jobconfig['execution']['jobDocument']['led']
-
-            if task=='publish_status' and value=='start':
-                mainBuffer['dbCmnd'].append({'table':'Cloud','operation':'update','value':'True','column':'PUBFLAG','source':'job'})
-                print("Publish Started")
-
-            elif task=='publish_status' and value=='stop':
-                mainBuffer['dbCmnd'].append({'table':'Cloud','operation':'update','value':'False','column':'PUBFLAG','source':'job'})
-                print("Publish Stopped")
-
-            if task=='publish_topic':
-                mainBuffer['dbCmnd'].append({'table':'Cloud','operation':'update','value':value,'column':'TOPIC','source':'job'})
-                print("Topic set",TOPIC)
-
-        #if cat=='node':
-        #if op=='read':
-         #   rr=node.readp(j['MAC'],j['SERVICE'],j['CHAR'],j['CONFIG'])
-        #publish rr
-    #if op=='write':
-     #   node.writep(j['MAC'],j['SERVICE'],j['CHAR'],j['CONFIG'])
-        jobstatustopic = "$aws/things/Test_gateway/jobs/"+ jobid + "/update"
-        #if operation=="publish" and cmd=="start":
-        #    pubflag=True
-        #elif operation=="publish" and cmd=="stop":
-        #    pubflag=False
-        #led config
-        client.publish(jobstatustopic, json.dumps({ "status" : "SUCCEEDED"}),0)
-
-
-def preq(led):
-    while True:
-        if not req.empty() and SCAN_STATUS=='Active':
-            r=req.get()
-            node.writep(r['MAC'],r['SERVICE'],r['CHAR'],r['CONFIG'])
-
-def pconfig(mac,service,char,config):
-    request={'MAC':mac,'SERVICE':service,'CHAR':char,'CONFIG':config}
-    req.put(request,block=True,timeout=2)
-
+import logging
+logging.basicConfig(level=0,filename='/var/opt/gateway/logs/main.log',filemode='w',format='[%(asctime)s] [%(levelname)s] - %(message)s')
+logger=logging.getLogger()
 
 def cloud():
     print("CLOUD Started")
@@ -112,33 +57,11 @@ def dbMaster():
         time.sleep(1)
 
 def nodeMaster():
-    FLG=monEvent.wait()
-    print("NODE STARTED")
+    logger.info("NODE STARTED")
     global SCAN_TIME
     while True:
 
-        if len(mainBuffer['nodeCmnd'])!=0:
-
-            job=mainBuffer['nodeCmnd'].popleft()
-            operation=job['operation']
-            #source=job['source']
-            task=job['task']
-            #value=job['value']
-            #service=job['service']
-            #char=job['char']
-            #config=job['config']
-            #mac=job['mac']
-
-
-
-            # if task=='config':
-                # if operation=='write':
-                    # writeP(mac,service,char,config)
-
-                # if operation=='read':
-                    # p=readP(mac service,char)
-                    # mainBuffer[source+'p']['value'].append(p)
-        elif C_STATUS=='Active' and N_STATUS=='Active':
+        if C_STATUS=='Active' and N_STATUS=='Active':
             payl=app_node(SCAN_TIME)
             if payl!=None:
                 q.append(payl)
@@ -153,7 +76,7 @@ if __name__=='__main__':
     mainBuffer={'cloud':deque([]),'monitor':deque([]),'dbCmnd':deque([]),'nodeCmnd':deque([])}
     confObject=ConfigHandler()
     confData=confObject.getDataForMain()
-
+    q=deque()
     que=[]
     #-------------------- GLOBAL VARIABLES  ------------------------------------------------------------
     global ID
@@ -174,7 +97,7 @@ if __name__=='__main__':
     HOST=confData['HOST']
     PORT=int(confData['PORT'])
     C_STATUS=confData['C_STATUS']
-    TOPIC=confData['TOPIC']
+    TOPIC=confData['publishTopic']
     PUBFLAG=confData['PUBFLAG']
     N_STATUS=confData['N_STATUS']
     SCAN_TIME=confData['SCAN_TIME']
@@ -198,13 +121,13 @@ if __name__=='__main__':
     t_dbMaster.start()
     t_nodeMaster=threading.Thread(name='nodeMaster', target=nodeMaster)
     t_nodeMaster.start()
-    t_monitor = threading.Thread(name='monitor', target=monitor,args=(monEvent,conEvent,))
-    t_monitor.start()
     t_cloud=threading.Thread(name='cloud', target=cloud)
     t_cloud.start()
     #-------------------------------------------------------------------------------------------------
 
     #-------  MAIN THREAD Section --------------------------------------------------------------------
+    prev_HOST=''
+    prev_PORT=''
     while True:
         if prev_HOST!=HOST or prev_PORT!=PORT:
             print("-"*20)
@@ -215,7 +138,6 @@ if __name__=='__main__':
                 client.loop_stop()
                 client.disconnect()
             client = mqtt.Client()
-            client.message_callback_add("$aws/things/Test_gateway/jobs/notify-next",job)
             print("Connecting to cloud...")
             funInitilise(client,SERVER_TYPE,HOST,PORT)
             prev_HOST=HOST

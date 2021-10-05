@@ -4,7 +4,7 @@
                 "enable":"active",
                 "topic":["topic","topic2"],
                 "category":["publishTopic","jobTopic","offlineTopic","logTopic","otaTopic"]
-                "status":["activate/deactivate"],
+                "status":["activate/deactivate","activate/deactivate"],
                 "task":"configTopic/configValue"
                 "interval":"5000ms",
                 "QoS":[0],
@@ -63,6 +63,8 @@ db read offline---{"db":{"table":"offline","range":"","topic":"topic"}}
 db read historical---{"db":{"table":"historical","range":"","topic":"topic"}}
 
 gateway read/write---{"gateway":{"operation":"Read/Write","component":"Scantime/devicename/C-Status/N-status/","value":""}}
+
+
 
 #############################################################################
 

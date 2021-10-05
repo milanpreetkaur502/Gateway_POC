@@ -1,5 +1,7 @@
 import sqlite3
 import time
+import os
+import subprocess
 
 #conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/mydatabasenew.db',check_same_thread=False)
 
@@ -11,6 +13,11 @@ class tables():
         print("table created")
 
     def __init__(self):
+        #os.system('lsblk -o mountpoint>withUsb.txt')
+        #data=subprocess.Popen(['diff','withoutUsb.txt','withUsb.txt'],stdout=subprocess.PIPE).communicate()[0]      #executing the command and getting the data into string format
+        #data=data.decode('utf-8')                                                       #decoding the binary the data into string
+        #data=data.split('\n')[1::2]
+        #print(data[0][2:])
         self.conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/demo/gatewayMain/src/mydatabasenew.db',check_same_thread=False)
         try:
             self.conn.execute('select * from Cloud')

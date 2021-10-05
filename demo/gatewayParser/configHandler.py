@@ -15,7 +15,7 @@ class ConfigHandler():
             dataDict['HOST']=data['HOST']
             dataDict['PORT']=data['PORT']
             dataDict['C_STATUS']=data['C_STATUS']
-            dataDict['publishTopic']=data['publishTopic']
+            dataDict['TOPIC']=data['publishTopic']
             dataDict['PUBFLAG']=data['PUBFLAG']
 
         with open("/var/opt/gateway/node.conf",'r') as file:

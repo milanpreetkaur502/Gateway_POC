@@ -30,18 +30,19 @@ class BLEScanner:
         return self
 
     def scan(self):
+        while True:
 
-        if self.stop_event.is_set():
-            return
+            if self.stop_event.is_set():
+                return
 
-        self.devices = self.scanner.scan(2, passive=True)
-        return self.devices
-        '''
-        for dev in self.devices:
-            print("Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi))
-            for (adtype, desc, value) in dev.getScanData():
-                print("%s  %s = %s" % (adtype, desc, value))
-        '''
+            self.devices = self.scanner.scan(2, passive=True)
+            return self.devices
+            '''
+            for dev in self.devices:
+                print("Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi))
+                for (adtype, desc, value) in dev.getScanData():
+                    print("%s  %s = %s" % (adtype, desc, value))
+            '''
 
     def peripheral(self,task,mode,condition,mac,val,srv,ch):
         for addr in mac:
@@ -92,8 +93,8 @@ def app_node(SCAN_TIME):
     if BT_STATUS=='Active':
         #lescan=Scanner(0)
         #devices=lescan.scan(int(SCAN_TIME))
-        c = Scanner()
-        devices=c.scan(2, passive=True)
+        c = BLEScanner()
+        devices=c.startScan()
         payload=[]
         devacc=0
         devtemp=0
