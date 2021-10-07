@@ -19,13 +19,13 @@
       width:100%;
       padding:5px;
     }
-  
+
     .btnWrap button, #editBtn{
       margin-top:10px;
       padding:3px 8px;
       float:right;
       letter-spacing:1.5px;
-    } 
+    }
     .btnWrap button{
       margin-left: 10px;
       color: white;
@@ -46,7 +46,7 @@
       box-sizing: border-box;
     }
   </style>
-  
+
   <div class="card" style="width:30%">
     <div class="card-head" style="background-color:#0091D5;">
         Device
@@ -82,10 +82,14 @@
                     <td><b>IP address:</b></td>
                     <td>{{deviceData}}</td>
                 </tr>
+                <tr>
+                    <td><b>Logging status:</b></td>
+                    <td>{{data.LOGGINGFLAG}}</td>
+                </tr>
             </tbody>
         </table>
         <button type="button" id="editBtn" >Edit</button>
     </div>
 </div>
-   
+
 {% endblock%}

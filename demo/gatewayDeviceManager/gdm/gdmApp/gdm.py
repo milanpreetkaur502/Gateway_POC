@@ -49,7 +49,9 @@ def home():
 @app.route('/deviceConfig')
 def deviceConfig():
     if 'logedIn' in session:
-        return render_template('deviceConfig.html',deviceData=ip)
+        data=confObject.getData("device")
+
+        return render_template('deviceConfig.html',deviceData=ip,data=data)
     return redirect(url_for('login'))
 
 @app.route('/cloudConfig',methods=['GET','POST'])

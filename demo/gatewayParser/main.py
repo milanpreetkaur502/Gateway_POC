@@ -30,7 +30,7 @@ import json
 import subprocess
 from node import *
 from datetime import datetime
-
+from configHandler import ConfigHandler
 topic_name = "job/ota"
 
 mqtt_url = 'a3qvnhplljfvjr-ats.iot.us-west-2.amazonaws.com' #url from aws
@@ -75,6 +75,7 @@ def node_peripheral(task,mode,condition,mac,val,srv,ch):
 
 def parse(jobconfig,client):
     confObject=ConfigHandler()
+    print(jobconfig)
     if 'execution' in jobconfig:
         jobid = jobconfig['execution']['jobId']
 
@@ -82,14 +83,15 @@ def parse(jobconfig,client):
         topic=jobconfig['execution']['jobdocument']['cloud']['topic']
         category=jobconfig['execution']['jobdocument']['cloud']['category']
         status=jobconfig['execution']['jobdocument']['cloud']['status']
-
+        j=0
         for i in topic:
-            temptopic=topic[i]
-            tempcategory=category[i]
-            tempstatus=status[i]
-            if temptopic=='publishTopic' & tempstatus=='activate':
+            temptopic=topic[j]
+            tempcategory=category[j]
+            tempstatus=status[j]
+            if temptopic=='publishTopic' and tempstatus=='activate':
                 confObject.updateData("cloud",{"PUBFLAG":"Active"})
             confObject.updateData("cloud",{tempcategory:temptopic})
+            j+=1
 
 
     if jobconfig['execution']['jobdocument']['node']['enable']=='active':
@@ -106,6 +108,13 @@ def parse(jobconfig,client):
             #node_peripheral("ch_write","multi","Null",mac,val,led_service_uuid,led_char_uuid)
             t_node = threading.Thread(name='job', target=node_peripheral,args=("ch_write","multi","Null",mac,val,led_service_uuid,led_char_uuid))
             t_node.start()
+    if jobconfig['execution']['jobdocument']['gateway']['enable']=='active':
+        if jobconfig['execution']['jobdocument']['gateway']['operation']=='write':
+            confObject.updateData("node",{"SCAN_RATE":jobconfig['execution']['jobdocument']['gateway']['scanWindow']})
+            confObject.updateData("device",{'NAME':jobconfig['execution']['jobdocument']['gateway']['deviceName']})
+            confObject.updateData("device",{'SERIAL_ID':jobconfig['execution']['jobdocument']['gateway']['deviceId']})
+            confObject.updateData("device",{'LOCATION':jobconfig['execution']['jobdocument']['gateway']['deviceLocatoin']})
+            confObject.updateData("device",{'GROUP':jobconfig['execution']['jobdocument']['gateway']['deviceGroup']})
 
     jobstatustopic = "$aws/things/Test_gateway/jobs/"+ jobid + "/update"
         #if operation=="publish" and cmd=="start":
@@ -127,7 +136,7 @@ if __name__ == "__main__":
                    cert_reqs = ssl.CERT_REQUIRED,
                    tls_version = ssl.PROTOCOL_TLSv1_2,
                    ciphers = None)
-    client.message_callback_add(topic_name, parse)
+    client.message_callback_add(topic_name, job)
     client.connect(mqtt_url, port = 8883, keepalive=60)
     client.subscribe(topic_name, 0)  #subscibe to the topic
     client.loop_start()
