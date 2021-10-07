@@ -46,13 +46,22 @@ def home():
         return render_template('home.html',nodeData=nodeData,cloudData=cloudData,deviceData=ip)
     return redirect(url_for('login'))
 
-@app.route('/deviceConfig')
+@app.route('/deviceConfig',methods=['GET'])
 def deviceConfig():
     if 'logedIn' in session:
         data=confObject.getData("device")
-
         return render_template('deviceConfig.html',deviceData=ip,data=data)
     return redirect(url_for('login'))
+
+@app.route('/deviceConfig/logSwitch',methods=['POST'])
+def logSwitcher():
+    if request.method=="POST":
+        if 'logStatus' in request.form:
+            confObject.updateData('device',{'LOGGINGFLAG':'Active'})
+        else:
+            confObject.updateData('device',{'LOGGINGFLAG':'Inactive'})
+    return redirect(url_for('deviceConfig'))
+
 
 @app.route('/cloudConfig',methods=['GET','POST'])
 def cloudConfig():
