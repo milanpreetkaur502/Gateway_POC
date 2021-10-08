@@ -4,35 +4,31 @@ class ConfigHandler():
 
     def getDataForMain(self):
         dataDict={'ID':'','NAME':'','SERVER_TYPE':'','HOST':'','PORT':'','C_STATUS':'','N_STATUS':'','I_STATUS':'','SCAN_TIME':'','TOPIC':'','PUBFLAG':''}
-        with open("/var/opt/gateway/device.conf",'r') as file:
+        with open("/var/lib/gateway/config.conf",'r') as file:
             data=json.load(file)
-            dataDict['ID']=data['SERIAL_ID']
-            dataDict['NAME']=data['NAME']
-
-        with open("/var/opt/gateway/cloud.conf",'r') as file:
-            data=json.load(file)
-            dataDict['SERVER_TYPE']=data['SERVER_TYPE']
-            dataDict['HOST']=data['HOST']
-            dataDict['PORT']=data['PORT']
-            dataDict['C_STATUS']=data['C_STATUS']
-            dataDict['publishTopic']=data['publishTopic']
-            dataDict['PUBFLAG']=data['PUBFLAG']
-
-        with open("/var/opt/gateway/node.conf",'r') as file:
-            data=json.load(file)
-            dataDict['N_STATUS']=data['N_STATUS']
-            dataDict['SCAN_TIME']=data['SCAN_TIME']
+            dataDict['ID']=data['device']['SERIAL_ID']
+            dataDict['NAME']=data['device']['NAME']
+            dataDict['SERVER_TYPE']=data['cloud']['SERVER_TYPE']
+            dataDict['HOST']=data['cloud']['HOST']
+            dataDict['PORT']=data['cloud']['PORT']
+            dataDict['C_STATUS']=data['cloud']['C_STATUS']
+            dataDict['TOPIC']=data['cloud']['publishTopic']
+            dataDict['PUBFLAG']=data['cloud']['PUBFLAG']
+            dataDict['N_STATUS']=data['node']['N_STATUS']
+            dataDict['SCAN_TIME']=data['node']['SCAN_TIME']
         return dataDict
 
     def getData(self,name):
-        with open(f"/var/opt/gateway/{name}.conf",'r') as file:
+        with open(f"/var/lib/gateway/config.conf",'r') as file:
             data=json.load(file)
-        return data
+        return data[name]
 
     def updateData(self,name,keyValue):
         data={}
-        with open(f"/var/opt/gateway/{name}.conf",'r') as file:
+        with open(f"/var/lib/gateway/config.conf",'r') as file:
             data=json.load(file)
-        with open(f"/var/opt/gateway/{name}.conf",'w') as file:
-            data.update(keyValue)
+            dataa=data[name]
+        with open(f"/var/lib/gateway/config.conf",'w') as file:
+            dataa.update(keyValue)
+            data.update({name:dataa})
             json.dump(data,file)

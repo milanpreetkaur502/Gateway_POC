@@ -4,7 +4,7 @@ import time
 import threading
 
 import logging
-logging.basicConfig(level=0,filename='/var/opt/gateway/logs/main.log',filemode='w',format='[%(asctime)s] [%(levelname)s] - %(message)s')
+logging.basicConfig(level=0,filename='/var/lib/gateway/logs/main.log',filemode='w',format='[%(asctime)s] [%(levelname)s] - %(message)s')
 logger=logging.getLogger()
 
 def cloud():
@@ -97,7 +97,7 @@ if __name__=='__main__':
     HOST=confData['HOST']
     PORT=int(confData['PORT'])
     C_STATUS=confData['C_STATUS']
-    TOPIC=confData['publishTopic']
+    TOPIC=confData['TOPIC']
     PUBFLAG=confData['PUBFLAG']
     N_STATUS=confData['N_STATUS']
     SCAN_TIME=confData['SCAN_TIME']

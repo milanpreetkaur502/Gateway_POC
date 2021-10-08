@@ -93,7 +93,7 @@ def app_node(SCAN_TIME):
         #lescan=Scanner(0)
         #devices=lescan.scan(int(SCAN_TIME))
         c = Scanner()
-        devices=c.scan(2, passive=True)
+        devices=c.scan(SCAN_TIME, passive=True)
         payload=[]
         devacc=0
         devtemp=0

@@ -92,6 +92,7 @@ def parse(jobconfig,client):
                 confObject.updateData("cloud",{"PUBFLAG":"Active"})
             confObject.updateData("cloud",{tempcategory:temptopic})
             j+=1
+        subprocess.run(['/var/lib/gateway/restart_script.sh'])
 
 
     if jobconfig['execution']['jobdocument']['node']['enable']=='active':
@@ -115,6 +116,7 @@ def parse(jobconfig,client):
             confObject.updateData("device",{'SERIAL_ID':jobconfig['execution']['jobdocument']['gateway']['deviceId']})
             confObject.updateData("device",{'LOCATION':jobconfig['execution']['jobdocument']['gateway']['deviceLocatoin']})
             confObject.updateData("device",{'GROUP':jobconfig['execution']['jobdocument']['gateway']['deviceGroup']})
+            subprocess.run(['/var/lib/gateway/restart_script.sh'])
 
     jobstatustopic = "$aws/things/Test_gateway/jobs/"+ jobid + "/update"
         #if operation=="publish" and cmd=="start":
