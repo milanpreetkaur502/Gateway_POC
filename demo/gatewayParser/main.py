@@ -12,7 +12,7 @@ How to run:- 1. From the terminal, navigate to the file location and type 'pytho
 
 #logger ---- info, debug, warning, error
 import logging
-logging.basicConfig(level=0,filename='/var/opt/gateway/logs/parser.log',filemode='w',format='[%(asctime)s] [%(levelname)s] - %(message)s')
+logging.basicConfig(level=0,filename='/var/tmp/parser.log',filemode='w',format='[%(asctime)s] [%(levelname)s] - %(message)s')
 logger=logging.getLogger()
 
 #conf ---
@@ -35,9 +35,9 @@ topic_name = "job/ota"
 
 mqtt_url = 'a3qvnhplljfvjr-ats.iot.us-west-2.amazonaws.com' #url from aws
 #certificates from aws
-root_ca = '/var/opt/gateway/certUploads/root.pem'
-public_crt = '/var/opt/gateway/certUploads/cert.pem.crt'
-private_key = '/var/opt/gateway/certUploads/key.pem.key'
+root_ca = '/etc/gateway/certUploads/root.pem'
+public_crt = '/etc/gateway/certUploads/cert.pem.crt'
+private_key = '/etc/gateway/certUploads/key.pem.key'
 
 def job(client,obj,msg):
     # This callback will only be called for messages with topics that match
@@ -92,7 +92,7 @@ def parse(jobconfig,client):
                 confObject.updateData("cloud",{"PUBFLAG":"Active"})
             confObject.updateData("cloud",{tempcategory:temptopic})
             j+=1
-        subprocess.run(['/var/lib/gateway/restart_script.sh'])
+        subprocess.run(['/usr/sbin/restart_script.sh'])
 
 
     if jobconfig['execution']['jobdocument']['node']['enable']=='active':
@@ -116,7 +116,7 @@ def parse(jobconfig,client):
             confObject.updateData("device",{'SERIAL_ID':jobconfig['execution']['jobdocument']['gateway']['deviceId']})
             confObject.updateData("device",{'LOCATION':jobconfig['execution']['jobdocument']['gateway']['deviceLocatoin']})
             confObject.updateData("device",{'GROUP':jobconfig['execution']['jobdocument']['gateway']['deviceGroup']})
-            subprocess.run(['/var/lib/gateway/restart_script.sh'])
+            subprocess.run(['/usr/sbin/restart_script.sh'])
 
     jobstatustopic = "$aws/things/Test_gateway/jobs/"+ jobid + "/update"
         #if operation=="publish" and cmd=="start":

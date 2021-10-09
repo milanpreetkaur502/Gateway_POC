@@ -102,7 +102,7 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
             print("Connection failed! Please try again...")
             exit(1)
 
-def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
+def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG):
     topic=t
     if SERVER_TYPE == 'custom':
         topic = 'Msg'
@@ -155,7 +155,8 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
             rt = client.publish(topic,data,qos=0)
             print("Publishing Data...", rt)
             print(sensorType,value)
-            #mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
+            if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+                mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
 
             return True
 
@@ -164,4 +165,5 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
             return False
     else:
         print("waiting...")
-        #mainBuffer['dbCmnd'].append({'table':'OfflineData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
+        if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+            mainBuffer['dbCmnd'].append({'table':'OfflineData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})

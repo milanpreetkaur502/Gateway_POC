@@ -4,7 +4,7 @@ class ConfigHandler():
 
     def getDataForMain(self):
         dataDict={'ID':'','NAME':'','SERVER_TYPE':'','HOST':'','PORT':'','C_STATUS':'','N_STATUS':'','I_STATUS':'','SCAN_TIME':'','TOPIC':'','PUBFLAG':''}
-        with open("/var/lib/gateway/config.conf",'r') as file:
+        with open("/etc/gateway/config.conf",'r') as file:
             data=json.load(file)
             dataDict['ID']=data['device']['SERIAL_ID']
             dataDict['NAME']=data['device']['NAME']
@@ -19,16 +19,16 @@ class ConfigHandler():
         return dataDict
 
     def getData(self,name):
-        with open(f"/var/lib/gateway/config.conf",'r') as file:
+        with open(f"/etc/gateway/config.conf",'r') as file:
             data=json.load(file)
         return data[name]
 
     def updateData(self,name,keyValue):
         data={}
-        with open(f"/var/lib/gateway/config.conf",'r') as file:
+        with open(f"/etc/gateway/config.conf",'r') as file:
             data=json.load(file)
             dataa=data[name]
-        with open(f"/var/lib/gateway/config.conf",'w') as file:
+        with open(f"/etc/gateway/config.conf",'w') as file:
             dataa.update(keyValue)
             data.update({name:dataa})
             json.dump(data,file)

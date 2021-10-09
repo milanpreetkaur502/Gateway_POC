@@ -4,7 +4,7 @@ import time
 import threading
 
 import logging
-logging.basicConfig(level=0,filename='/var/lib/gateway/logs/main.log',filemode='w',format='[%(asctime)s] [%(levelname)s] - %(message)s')
+logging.basicConfig(level=0,filename='/var/tmp/main.log',filemode='w',format='[%(asctime)s] [%(levelname)s] - %(message)s')
 logger=logging.getLogger()
 
 def cloud():
@@ -28,9 +28,9 @@ def cloud():
                     }
 
                 if SERVER_TYPE == 'custom':
-                    publishData(client,dt,TOPIC,'True',mainBuffer,SERVER_TYPE)
+                    publishData(client,dt,TOPIC,'True',mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG)
                 elif SERVER_TYPE == 'aws':
-                    publishData(client,dt,TOPIC,PUBFLAG,mainBuffer,SERVER_TYPE)
+                    publishData(client,dt,TOPIC,PUBFLAG,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG)
         time.sleep(0.01)
 
 def dbMaster():
@@ -91,6 +91,8 @@ if __name__=='__main__':
     global SERVER_TYPE
     global TOPIC
     global PUBFLAG
+    global STORAGEFLAG
+    global LOGGINGFLAG
     ID=confData['ID']
     NAME=confData['NAME']
     SERVER_TYPE=confData['SERVER_TYPE']
@@ -101,6 +103,8 @@ if __name__=='__main__':
     PUBFLAG=confData['PUBFLAG']
     N_STATUS=confData['N_STATUS']
     SCAN_TIME=confData['SCAN_TIME']
+    STORAGEFLAG=confData['STORAGEFLAG']
+    LOGGINGFLAG=confData['LOGGINGFLAG']
     I_STATUS=''    #why these variables are here
     BT_STATUS=''
     print("SERVER_TYPE->",SERVER_TYPE)

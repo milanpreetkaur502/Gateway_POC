@@ -18,7 +18,7 @@ class tables():
         #data=data.decode('utf-8')                                                       #decoding the binary the data into string
         #data=data.split('\n')[1::2]
         #print(data[0][2:])
-        self.conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/demo/gatewayMain/src/mydatabasenew.db',check_same_thread=False)
+        self.conn = sqlite3.connect('/media/flashdrive/mydatabasenew.db',check_same_thread=False)
         try:
             self.conn.execute('select * from Cloud')
         except:

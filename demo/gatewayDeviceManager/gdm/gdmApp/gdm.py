@@ -6,7 +6,7 @@ import os
 from .configHandler import ConfigHandler
 confObject=ConfigHandler()
 
-path='/var/lib/gateway/certUploads/'
+path='/etc/gateway/certUploads/'
 ip=""
 try:
     ip=os.popen('ip addr show eth1').read().split("inet ")[1].split("/")[0]
@@ -57,10 +57,10 @@ def logSwitcher():
     if request.method=="POST":
         if 'logStatus' in request.form:
             confObject.updateData('device',{'LOGGINGFLAG':'Active'})
-            subprocess.run(['/var/lib/gateway/restart_script.sh'])
+            subprocess.run(['/usr/sbin/restart_script.sh'])
         else:
             confObject.updateData('device',{'LOGGINGFLAG':'Inactive'})
-            subprocess.run(['/var/lib/gateway/restart_script.sh'])
+            subprocess.run(['/usr/sbin/restart_script.sh'])
     return redirect(url_for('deviceConfig'))
 
 
@@ -70,12 +70,12 @@ def cloudConfig():
         if request.method=="POST":     #need db integration for here
             if 'status' in request.form:
                 confObject.updateData('cloud',{'C_STATUS':request.form['status']})
-                subprocess.run(['/var/lib/gateway/restart_script.sh'])
+                subprocess.run(['/usr/sbin/restart_script.sh'])
             server=request.form.get('server')
             if 'server' in request.form:
                 di={'SERVER_TYPE':server,'HOST':request.form['hostAdd'],'PORT':request.form['port'],'PUBFLAG':'False'}
                 confObject.updateData('cloud',di)
-                subprocess.run(['/var/lib/gateway/restart_script.sh'])
+                subprocess.run(['/usr/sbin/restart_script.sh'])
             if server=='aws':
                 root=request.files['rootFile']                  #accessing the uploaded files
                 pvtKey=request.files['pvtKey']
@@ -99,7 +99,7 @@ def nodeConfig():
     if 'logedIn' in session:
         if request.method=="POST":
             confObject.updateData('node',{'SCAN_TIME':request.form['scanRate'],'N_STATUS':request.form['status']})
-            subprocess.run(['/var/lib/gateway/restart_script.sh'])
+            subprocess.run(['/usr/sbin/restart_script.sh'])
         nodeData=confObject.getData('node')
         nodeData={'scanRate':nodeData['SCAN_TIME'],'status':nodeData['N_STATUS']}
         return render_template('nodeConfig.html',nodeData=nodeData)
