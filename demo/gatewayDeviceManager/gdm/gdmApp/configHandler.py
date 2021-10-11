@@ -16,6 +16,8 @@ class ConfigHandler():
             dataDict['PUBFLAG']=data['cloud']['PUBFLAG']
             dataDict['N_STATUS']=data['node']['N_STATUS']
             dataDict['SCAN_TIME']=data['node']['SCAN_TIME']
+            dataDict['STORAGEFLAG']=data['device']['STORAGEFLAG']
+            dataDict['LOGGINGFLAG']=data['device']['LOGGINGFLAG']
         return dataDict
 
     def getData(self,name):

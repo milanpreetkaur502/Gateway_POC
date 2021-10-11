@@ -1,11 +1,14 @@
 from flask import render_template, request, redirect, session, url_for  #necessary Imports
 import subprocess   #module import for dealing with execution of console command
 from gdmApp import app
-from .database import p1 as db
 import os
 from .configHandler import ConfigHandler
 confObject=ConfigHandler()
-
+data=confObject.getDataForMain()
+STORAGEFLAG=data['STORAGEFLAG']
+LOGGINGFLAG=data['LOGGINGFLAG']
+if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+    from .database import p1 as db
 path='/etc/gateway/certUploads/'
 ip=""
 try:
@@ -133,16 +136,17 @@ def reports():
         return render_template('reports.html')
     return redirect(url_for('login'))
 
-@app.route('/dataManager')
-def dataManager():
-    if 'logedIn' in session:
-        data=db.getdata('HistoricalData')
-        return render_template('dataManager.html',data=data,type='Historical Data')
-    return redirect(url_for('login'))
+if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+    @app.route('/dataManager')
+    def dataManager():
+        if 'logedIn' in session:
+            data=db.getdata('HistoricalData')
+            return render_template('dataManager.html',data=data,type='Historical Data')
+        return redirect(url_for('login'))
 
-@app.route('/dataManager/offData')
-def offlineData():
-    if 'logedIn' in session:
-        data=db.getdata('OfflineData')
-        return render_template('dataManager.html',data=data,type='Offline Data')
-    return redirect(url_for('login'))
+    @app.route('/dataManager/offData')
+    def offlineData():
+        if 'logedIn' in session:
+            data=db.getdata('OfflineData')
+            return render_template('dataManager.html',data=data,type='Offline Data')
+        return redirect(url_for('login'))
