@@ -1,7 +1,6 @@
 import sqlite3
 import time
-import os
-import subprocess
+
 
 #conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/mydatabasenew.db',check_same_thread=False)
 

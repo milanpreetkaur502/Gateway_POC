@@ -3,12 +3,10 @@
 Date:28/08/2021
 '''
 #import paho.mqtt.client as mqtt
-import ssl, random
-import time
+import ssl
 import json
-import sys
 import requests
-from datetime import datetime
+
 
 #from node import app_node
 

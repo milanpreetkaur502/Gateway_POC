@@ -1,5 +1,10 @@
-from essentialImports import *
-from  configHandler import ConfigHandler
+import paho.mqtt.client as mqtt
+from collections import deque
+from gatewayapp.cloud import *
+from gateway.node import *
+from datetime import datetime
+
+from  gateway.configHandler import ConfigHandler
 import time
 import threading
 
@@ -115,14 +120,21 @@ if __name__=='__main__':
     print("PUBFLAG->",PUBFLAG)
     print("N_STATUS->",N_STATUS)
     print("SCAN_TIME->",SCAN_TIME)
+    print("LOGGINGFLAG->",LOGGINGFLAG)    
+    print("STORAGEFLAG->",STORAGEFLAG)
+
+    if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+        from gatewayapp.database import p1 as db
+
     #-------------------------------------------------------------------------------------------------
 
     #-------  THREAD Section ----------------------------------------------------------------------
     conEvent=threading.Event()
     monEvent=threading.Event()
     chgEvent=threading.Event()
-    t_dbMaster=threading.Thread(name='dbMaster', target=dbMaster)
-    t_dbMaster.start()
+    if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+        t_dbMaster=threading.Thread(name='dbMaster', target=dbMaster)
+        t_dbMaster.start()
     t_nodeMaster=threading.Thread(name='nodeMaster', target=nodeMaster)
     t_nodeMaster.start()
     t_cloud=threading.Thread(name='cloud', target=cloud)
