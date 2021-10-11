@@ -1,10 +1,10 @@
 import paho.mqtt.client as mqtt
 from collections import deque
 from gatewayapp.cloud import *
-from gateway.node import *
+from gatewayapp.node import *
 from datetime import datetime
 
-from  gateway.configHandler import ConfigHandler
+from  gatewayapp.configHandler import ConfigHandler
 import time
 import threading
 
@@ -120,7 +120,7 @@ if __name__=='__main__':
     print("PUBFLAG->",PUBFLAG)
     print("N_STATUS->",N_STATUS)
     print("SCAN_TIME->",SCAN_TIME)
-    print("LOGGINGFLAG->",LOGGINGFLAG)    
+    print("LOGGINGFLAG->",LOGGINGFLAG)
     print("STORAGEFLAG->",STORAGEFLAG)
 
     if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':

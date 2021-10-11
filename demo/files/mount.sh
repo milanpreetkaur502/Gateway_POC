@@ -66,7 +66,7 @@ automount() {
 		logger "mount.sh/automount" "Auto-mount of [/media/$name] successful"
 		touch "/tmp/.automount-$name"
 	fi
-        sed -i 's/"STORAGEFLAG":.*/"STORAGEFLAG":"Active"/' /home/root/test/device.conf
+        sed -i 's/"STORAGEFLAG":.*/"STORAGEFLAG":"Active"/' /etc/gateway/config.conf
 }
 	
 rm_dir() {
@@ -77,7 +77,7 @@ rm_dir() {
 	else
 		logger "mount.sh/automount" "Not removing non-empty directory [$1]"
 	fi
-	sed -i 's/"STORAGEFLAG":.*/"STORAGEFLAG":"Inactive"/' /home/root/test/device.conf
+	sed -i 's/"STORAGEFLAG":.*/"STORAGEFLAG":"Inactive"/' /etc/gateway/config.conf
 }
 
 # No ID_FS_TYPE for cdrom device, yet it should be mounted
