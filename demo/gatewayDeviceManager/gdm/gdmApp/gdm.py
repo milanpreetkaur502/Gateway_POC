@@ -44,14 +44,14 @@ def home():
         else:
             serverType='Secured'
         cloudData={'server':server,'serverType':serverType,'hostAdd':cloud["HOST"],'port':cloud["PORT"],'status':cloud['C_STATUS'],'topic':cloud['publishTopic'],'pubFlag':cloud['PUBFLAG']}
-        return render_template('home.html',nodeData=nodeData,cloudData=cloudData,deviceData=ip)
+        deviceData=confObject.getData("device")
+        return render_template('home.html',nodeData=nodeData,cloudData=cloudData,data=deviceData,ip=ip)
     return redirect(url_for('login'))
 
 @app.route('/deviceConfig',methods=['GET'])
 def deviceConfig():
     if 'logedIn' in session:
         data=confObject.getData("device")
-
         return render_template('deviceConfig.html',ip=ip,data=data)
     return redirect(url_for('login'))
 
