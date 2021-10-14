@@ -9,6 +9,7 @@ Description=Main Application
 [Service]
 
 #Command to execute when the service is started
+
 ExecStartPre=/bin/sleep 3
 ExecStart=/home/lab/gateway/Gateway_POC/demo/gatewayMain/src/main.py
 # Automatically restart the service if it crashes
