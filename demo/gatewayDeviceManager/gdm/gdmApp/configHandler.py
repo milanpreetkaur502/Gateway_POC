@@ -33,4 +33,4 @@ class ConfigHandler():
         with open(f"/etc/gateway/config.conf",'w') as file:
             dataa.update(keyValue)
             data.update({name:dataa})
-            json.dump(data,file)
+            json.dump(data,file,indent=4,separators=(',', ': '))
