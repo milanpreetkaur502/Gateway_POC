@@ -67,7 +67,7 @@ def nodeMaster():
     while True:
 
         if C_STATUS=='Active' and N_STATUS=='Active':
-            payl=app_node(SCAN_TIME)
+            payl=app_node(int(SCAN_TIME))
             if payl!=None:
                 q.append(payl)
                 print(len(q))
