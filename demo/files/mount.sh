@@ -66,7 +66,7 @@ automount() {
 		logger "mount.sh/automount" "Auto-mount of [/media/$name] successful"
 		touch "/tmp/.automount-$name"
 	fi
-        jq --arg a "Active" '.device.STORAGEFLAG = $a' /etc/gateway/config.conf > "tmp" && mv "tmp" /etc/gateway/config.conf
+        jq --arg a "Active" '.device.STORAGEFLAG = $a' /etc/gateway/config.conf > "tmpt" && mv "tmpt" /etc/gateway/config.conf
 }
 	
 rm_dir() {
@@ -77,7 +77,7 @@ rm_dir() {
 	else
 		logger "mount.sh/automount" "Not removing non-empty directory [$1]"
 	fi
-	jq --arg a "Inactive" '.device.STORAGEFLAG = $a' /etc/gateway/config.conf > "tmp" && mv "tmp" /etc/gateway/config.conf
+	#jq --arg a "Inactive" '.device.STORAGEFLAG = $a' /etc/gateway/config.conf > "tmpt" && mv "tmpt" /etc/gateway/config.conf
 }
 
 # No ID_FS_TYPE for cdrom device, yet it should be mounted
@@ -109,6 +109,6 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	# Remove empty directories from auto-mounter
 	name="`basename "$DEVNAME"`"
 	#test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
-        sed -i 's/"STORAGEFLAG":.*/"STORAGEFLAG":"inactive"/' /home/root/test/device.conf
+        jq --arg a "Inactive" '.device.STORAGEFLAG = $a' /etc/gateway/config.conf > "tmpt" && mv "tmpt" /etc/gateway/config.conf
         
 fi

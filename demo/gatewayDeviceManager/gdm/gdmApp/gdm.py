@@ -115,9 +115,13 @@ def networkConfig():
             ssid=request.form['ssid']
             password=""
             if 'security' in request.form:
-                password="None"
+                password="none"
+                security="none"
+
             else:
                 password=request.form["passForWifi"]
+                security="psk"
+            confObject.updateData("network",{"TYPE":"WIFI","SSID":ssid,"PASSPHRASE":password,"SECURITY":security})
         return render_template('networkConfig.html')
     return redirect(url_for('login'))
 

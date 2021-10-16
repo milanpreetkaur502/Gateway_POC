@@ -1,5 +1,6 @@
 import sqlite3
 import time
+import csv
 
 
 #conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/mydatabasenew.db',check_same_thread=False)
@@ -17,6 +18,9 @@ class tables():
         #data=data.decode('utf-8')                                                       #decoding the binary the data into string
         #data=data.split('\n')[1::2]
         #print(data[0][2:])
+        with open("/etc/gateway/output.csv","w") as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(["MacAdd" , "rssi"  , "value" , "sensorType" ,"date"])
         self.conn = sqlite3.connect('/media/flashdrive/mydatabasenew.db',check_same_thread=False)
         try:
             self.conn.execute('select * from Cloud')
@@ -131,7 +135,14 @@ class tables():
     def close(self):
         self.conn.close()
 
+    def putdatacsv(self,data):
+        with open("/etc/gateway/output.csv","a") as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(data)
+
 p1=tables()
+p1.putdatacsv(["ff:ff","-80","1","BLE","yesss"])
+p1.putdatacsv(["ff:ee","-80","1","BLE","yesss"])
 #print(p1.getdata('Node'))
 #p1.calltable()
 
