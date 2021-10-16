@@ -108,9 +108,16 @@ def nodeConfig():
         return render_template('nodeConfig.html',nodeData=nodeData)
     return redirect(url_for('login'))
 
-@app.route('/netConfig')
+@app.route('/netConfig',methods=['GET','POST'])
 def networkConfig():
     if 'logedIn' in session:
+        if request.method=="POST":
+            ssid=request.form['ssid']
+            password=""
+            if 'security' in request.form:
+                password="None"
+            else:
+                password=request.form["passForWifi"]
         return render_template('networkConfig.html')
     return redirect(url_for('login'))
 
