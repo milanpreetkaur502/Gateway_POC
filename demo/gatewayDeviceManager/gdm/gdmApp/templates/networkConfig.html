@@ -70,7 +70,7 @@
           <tbody id="tableBody">
               <tr>
                   <td><b>SSID:</b></td>
-                  <td><input type="text" placeholder="Enter SSID" value="" name="ssid"></td>
+                  <td><input type="text" placeholder="Enter SSID" value="" name="ssid" required></td>
               </tr>
               <tr>
                 <td><b>Securtiy:</b></td>
@@ -85,7 +85,7 @@
           </tbody>
       </table>
       <div class="btnWrap" id="cancelContBtnWrap">
-        <button style="background-color:#d32d41;" onclick="hideWifiInput()" type="button">Cancel</button> <button style="background-color:#4da851"  type="submit">Save</button>
+        <button style="background-color:#d32d41;" onclick="hideWifiInput()" type="button">Cancel</button> <button style="background-color:#4da851" onclick="alert('Changing wifi settings will change the IP address of the gateway. Please connect to the device manager with updated IP address.')" type="submit">Connect</button>
       </div>
     </form>
   </div>

@@ -121,7 +121,7 @@ def networkConfig():
             else:
                 password=request.form["passForWifi"]
                 security="psk"
-            confObject.updateData("network",{"TYPE":"WIFI","SSID":ssid,"PASSPHRASE":password,"SECURITY":security})
+            # confObject.updateData("network",{"TYPE":"WIFI","SSID":ssid,"PASSPHRASE":password,"SECURITY":security})
         return render_template('networkConfig.html')
     return redirect(url_for('login'))
 
