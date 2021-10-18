@@ -50,7 +50,7 @@ def dbMaster():
 
             if job['operation']=='write':
                 if table=='HistoricalData':
-                    db.putdata(table,value)
+                    db.putdatacsv(value)
                 if table=='OfflineData':
                     db.putdata(table,value)
 

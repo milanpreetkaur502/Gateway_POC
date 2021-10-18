@@ -2,6 +2,7 @@
         "jobName":"gateway",	
 	"cloud":{
                 "enable":"active",
+                "operation":"read/write",
                 "topic":["topic","topic2"],
                 "category":["publishTopic","jobTopic","offlineTopic","logTopic","otaTopic"]
                 "status":["activate/deactivate","activate/deactivate"],
@@ -12,7 +13,7 @@
             },
     "node":{
                 "enable":"active",
-                "operation":"Read/Write",
+                "operation":"read/write",
                 "mac":["ff:11:22:33:44:ff"/all],              #all in the filter category
                 "filterType":"addr/name/companyId",
                 "filtervalue":"random/public/name/ibeacon/eddystone",
@@ -29,7 +30,7 @@
          },
     "gateway":{
                 "enable":"active",
-                "operation":"Read/Write",
+                "operation":"read/write",
                 "scanWindow":"5000ms",
                 "deviceName":"aaa",
                 "deviceId":"111",
