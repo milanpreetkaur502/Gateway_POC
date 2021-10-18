@@ -38,13 +38,14 @@ global HOST
 global PORT
 global SERVER_TYPE
 global PUBFLAG
+global C_STATUS
 SERVER_TYPE=confData['SERVER_TYPE']
+C_STATUS=confData['C_STATUS']
 HOST=confData['HOST']
 PORT=int(confData['PORT'])
 PUBFLAG=confData['PUBFLAG']
-I_STATUS=''    #why these variables are here
-BT_STATUS=''
 print("SERVER_TYPE->",SERVER_TYPE)
+print("CLOUD_STATUS->",C_STATUS)
 print("HOST->",HOST)
 print("PORT->",PORT)
 print("PUBFLAG->",PUBFLAG)
@@ -173,38 +174,35 @@ def parse(jobconfig,client):
 #-------------- Main start------------------
 if __name__ == "__main__":
 
-    client = mqtt.Client()   #initialise mqtt client
-    client.tls_set(root_ca,certfile = public_crt,keyfile = private_key,cert_reqs = ssl.CERT_REQUIRED,tls_version = ssl.PROTOCOL_TLSv1_2,ciphers = None)
-    client.message_callback_add(topic, job)
-    client.connect(HOST, PORT, keepalive=60)
-    client.subscribe(topic, 0)  #subscibe to the topic
-    client.loop_start()
+
     prev_HOST=''
     prev_PORT=''
+
+    client = mqtt.Client()
+    l="not connected"
     while True:
-        if prev_HOST!=HOST or prev_PORT!=PORT:
-            print("-"*20)
-            print("Server setting")
+        if C_STATUS=="Active" and SERVER_TYPE=="aws":
 
-            client.loop_stop()
-            client.disconnect()
+            if prev_HOST!=HOST or prev_PORT!=PORT:
+                print("-"*20)
+                print("Server setting")
 
-            client = mqtt.Client()
-            print("Connecting to cloud...")
-            client.tls_set(root_ca,
-                           certfile = public_crt,
-                           keyfile = private_key,
-                           cert_reqs = ssl.CERT_REQUIRED,
-                           tls_version = ssl.PROTOCOL_TLSv1_2,
-                           ciphers = None)
-            prev_HOST=HOST
-            prev_PORT=PORT
-            client.message_callback_add(topic, job)
-            client.connect(HOST, PORT, keepalive=60)
-            client.subscribe(topic, 0)  #subscibe to the topic
-            client.loop_start()
-            print("-"*20)
+                client.loop_stop()
+                client.disconnect()
+
+
+                print("Connecting to cloud...")
+                client.tls_set(root_ca,certfile = public_crt,keyfile = private_key,cert_reqs = ssl.CERT_REQUIRED,tls_version = ssl.PROTOCOL_TLSv1_2,ciphers = None)
+                prev_HOST=HOST
+                prev_PORT=PORT
+                client.message_callback_add(topic, job)
+                client.connect(HOST, PORT, keepalive=60)
+                client.subscribe(topic, 0)  #subscibe to the topic
+                client.loop_start()
+                print("-"*20)
+                l='connected'
+        else:
+            print("C_STATUS not active or server not AWS")
         time.sleep(1)
-        print("Script running! Please wait...")
-        sleep(1)
+        print("Script running! Status: ",l)
 #--------------- End of script --------------
