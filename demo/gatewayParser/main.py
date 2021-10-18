@@ -116,7 +116,8 @@ def parse(jobconfig,client):
                         confObject.updateData("cloud",{"PUBFLAG":"Active"})
                     confObject.updateData("cloud",{tempcategory:temptopic})
                     j+=1
-                #subprocess.run(['/usr/sbin/restart_script.sh'])
+                subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+                subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
 
         if jobconfig['execution']['jobdocument']['cloud']['operation']=="read":
             c=confObject.getData("cloud")
@@ -150,7 +151,8 @@ def parse(jobconfig,client):
                 confObject.updateData("device",{'LOCATION':jobconfig['execution']['jobdocument']['gateway']['deviceLocation']})
             if jobconfig['execution']['jobdocument']['gateway']['deviceGroup']!="":
                 confObject.updateData("device",{'GROUP':jobconfig['execution']['jobdocument']['gateway']['deviceGroup']})
-            #subprocess.run(['/usr/sbin/restart_script.sh'])
+            subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+            subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
 
         if jobconfig['execution']['jobdocument']['gateway']['operation']=='read':
             d=confObject.getData("device")

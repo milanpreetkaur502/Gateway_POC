@@ -8,9 +8,6 @@ from  gatewayapp.configHandler import ConfigHandler
 import time
 import threading
 
-import logging
-logging.basicConfig(level=0,filename='/var/tmp/main.log',filemode='w',format='[%(asctime)s] [%(levelname)s] - %(message)s')
-logger=logging.getLogger()
 
 def cloud():
     print("CLOUD Started")
@@ -62,7 +59,7 @@ def dbMaster():
         time.sleep(1)
 
 def nodeMaster():
-    logger.info("NODE STARTED")
+    print("NODE STARTED")
     global SCAN_TIME
     while True:
 

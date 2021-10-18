@@ -141,8 +141,8 @@ class tables():
             csvwriter.writerow(data)
 
 p1=tables()
-p1.putdatacsv(["ff:ff","-80","1","BLE","yesss"])
-p1.putdatacsv(["ff:ee","-80","1","BLE","yesss"])
+#p1.putdatacsv(["ff:ff","-80","1","BLE","yesss"])
+#p1.putdatacsv(["ff:ee","-80","1","BLE","yesss"])
 #print(p1.getdata('Node'))
 #p1.calltable()
 
