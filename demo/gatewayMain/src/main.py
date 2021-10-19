@@ -142,7 +142,7 @@ if __name__=='__main__':
     prev_HOST=''
     prev_PORT=''
     while True:
-        if prev_HOST!=HOST or prev_PORT!=PORT:
+        if (prev_HOST!=HOST or prev_PORT!=PORT) and C_STATUS=='Active':
             print("-"*20)
             print("Server setting")
             if chgEvent.isSet():
@@ -160,5 +160,6 @@ if __name__=='__main__':
             client.loop_start()
             chgEvent.set()
             print("-"*20)
+        print("main loop")
         time.sleep(1)
     #-------------------------------------------------------------------------------------------------

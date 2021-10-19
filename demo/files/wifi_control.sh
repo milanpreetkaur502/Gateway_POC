@@ -7,7 +7,7 @@ security=$3
 connmanctl scan wifi
 TEST=`connmanctl services | grep $SSID | awk '{print $1}'`
 ​
-if [ $SSID == $TEST ];then
+if [[ $SSID == $TEST ]];then
 HASH=`connmanctl services | grep $SSID | awk '{print $2}'`
 else
 HASH=`connmanctl services | grep $SSID | awk '{print $3}'`
