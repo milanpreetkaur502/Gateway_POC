@@ -139,7 +139,7 @@ body{
 .card-content table,th, td{
     border-bottom: 1px solid rgb(204, 204, 204);
     border-collapse: collapse;
-    padding: 15px 10px;
+    padding: 10px 5px;
 }
 .status-active{
     height: 20px;

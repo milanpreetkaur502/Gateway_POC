@@ -11,7 +11,8 @@ class tables():
         print("table created")
 
     def __init__(self):
-        self.conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/gatewayMain/src/mydatabasenew.db',check_same_thread=False)
+        self.conn = sqlite3.connect('/media/flashdrive/mydatabasenew.db',check_same_thread=False)
+        # self.conn = sqlite3.connect('/home/attu/Desktop/mydatabasenew.db',check_same_thread=False)
         try:
             self.conn.execute('select * from Cloud')
         except:
@@ -87,9 +88,9 @@ class tables():
 
 
     def callputdata(self):
-        self.putdata('Device', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', 'Active'))
-        self.putdata('Cloud', ('1','aws', '3.142.131.2', '8883', 'Active','beacon','True'))
-        self.putdata('Node', ('1' ,'3', 'Active', 'Active'))
+        self.putdata('Device', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', 'Inactive'))
+        self.putdata('Cloud', ('1','custom', '0.0.0.0', '8883', 'Inactive','beacon','False'))
+        self.putdata('Node', ('1' ,'3', 'Inactive', 'Inactive'))
         #self.putdata('HistoricalData', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', '20' , '20' , '20' ,'2021-09-03'))
         #self.putdata('OfflineData', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', '20' , '20' , '20' ,'2021-09-03'))
 

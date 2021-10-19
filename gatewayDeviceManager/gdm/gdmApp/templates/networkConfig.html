@@ -8,9 +8,7 @@
 <li ><a href="{{url_for('cloudConfig')}}"><img class="icon"  ><P>Cloud Config</P></a></li>
 <li ><a href="{{url_for('nodeConfig')}}"><img class="icon"  ><P>Node Config</P></a></li>
 <li class="active"><a href="#"><img class="icon"  ><P>Network Config</P></a></li>
-<li ><a href="{{url_for('dataManager')}}"><img class="icon"  ><P>Data Manager</P></a></li>
 <li ><a href="{{url_for('debug')}}"><img class="icon"  ><P>Debug</P></a></li>
-<li ><a href="{{url_for('reports')}}"><img class="icon"  ><P>Reports</P></a></li>
 {%endblock%}
 
 {% block content %}
@@ -28,19 +26,99 @@
         border: none;
         box-shadow: 0px 1px 4px rgba(41, 41, 41, 0.568);
       }
+      .content-container{
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+      }
+      input[type=text]{
+        width: 100%;
+        padding: 12px 20px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      input[type=number]{
+        width: 100%;
+        padding: 12px 20px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
 </style>
 
-<div class="card" id="showCard" style="width:50%">
+<div class="card" id="editBtnCard" style="width:50%">
     <div class="card-content">
         <table style="width: 100%;">
             <tbody>
               <tr>
                 <td><b>Network Type:</b></td>
-                <td>Ethernet</td>
+                <td>WIFI</td>
               </tr>
             </tbody>
         </table>
-        <button type="button" id="editBtn" >Edit</button>
+        <button type="button" id="editBtn" onclick="showWifiInput()">Edit</button>
   </div>
+</div>
+
+<div class="card" id="wifiInput" style="display:none;width:40%">
+  <div class="card-content">
+    <form action="" method="post" id="wifiInputForm">
+      <table style="width: 100%;">
+          <tbody id="tableBody">
+              <tr>
+                  <td><b>SSID:</b></td>
+                  <td><input type="text" placeholder="Enter SSID" value="" name="ssid" required></td>
+              </tr>
+              <tr>
+                <td><b>Securtiy:</b></td>
+                <td>
+                  <label for="securityCheckbox" style="height:10px;width:10px;padding-right:10px">None</label><input type="checkbox" onchange="toglePassField()"  value="None" id="securityCheckbox" name="security" style="padding-top: 10px;"> 
+                </td>
+              </tr>
+              <tr id="passwordRow">
+                <td><b>Password:</b></td>
+                <td><input type="text" placeholder="Enter Password" value="" name="passForWifi"></td>
+            </tr>
+          </tbody>
+      </table>
+      <div class="btnWrap" id="cancelContBtnWrap">
+        <button style="background-color:#d32d41;" onclick="hideWifiInput()" type="button">Cancel</button> <button style="background-color:#4da851" onclick="alert('Changing wifi settings will change the IP address of the gateway. Please connect to the device manager with updated IP address.')" type="submit">Connect</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+
+  function toglePassField(){
+    let value=document.getElementById("securityCheckbox").checked;
+    let passRow=document.getElementById("passwordRow");
+    if (value==true){
+      passRow.style.display="none";
+      passRow.value="none";
+    }else{
+      passRow.style.display="block";
+    }
+  }
+
+  
+function showWifiInput(){
+  document.getElementById("wifiInput").style.display="block";
+  document.getElementById("editBtnCard").style.display="none";
+}
+
+function hideWifiInput(){
+  document.getElementById("wifiInput").style.display="none";
+  document.getElementById("editBtnCard").style.display="block";
+  document.getElementById("wifiInputForm").reset();
+  document.getElementById("passwordRow").style.display="block";
+}
+
+</script>
+  
+
 
 {% endblock%}

@@ -1,5 +1,7 @@
 import sqlite3
 import time
+import csv
+
 
 #conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/mydatabasenew.db',check_same_thread=False)
 
@@ -11,7 +13,15 @@ class tables():
         print("table created")
 
     def __init__(self):
-        self.conn = sqlite3.connect('/home/lab/gateway/Gateway_POC/gatewayMain/src/mydatabasenew.db',check_same_thread=False)
+        #os.system('lsblk -o mountpoint>withUsb.txt')
+        #data=subprocess.Popen(['diff','withoutUsb.txt','withUsb.txt'],stdout=subprocess.PIPE).communicate()[0]      #executing the command and getting the data into string format
+        #data=data.decode('utf-8')                                                       #decoding the binary the data into string
+        #data=data.split('\n')[1::2]
+        #print(data[0][2:])
+        with open("/etc/gateway/output.csv","w") as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(["MacAdd" , "rssi"  , "value" , "sensorType" ,"date"])
+        self.conn = sqlite3.connect('/media/flashdrive/mydatabasenew.db',check_same_thread=False)
         try:
             self.conn.execute('select * from Cloud')
         except:
@@ -87,9 +97,9 @@ class tables():
 
 
     def callputdata(self):
-        self.putdata('Device', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', 'Active'))
-        self.putdata('Cloud', ('1','aws', 'a3qvnhplljfvjr-ats.iot.us-west-2.amazonaws.com', '8883', 'Active','beacon','True'))
-        self.putdata('Node', ('1' ,'6', 'Active', 'Active'))
+        self.putdata('Device', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', 'Inactive'))
+        self.putdata('Cloud', ('1','custom', '0.0.0.0', '8883', 'Inactive','beacon','False'))
+        self.putdata('Node', ('1' ,'3', 'Inactive', 'Inactive'))
         #self.putdata('HistoricalData', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', '20' , '20' , '20' ,'2021-09-03'))
         #self.putdata('OfflineData', ('1', '1100110011', 'Test Device', '172.23.0.26', 'ETHERNET', '20' , '20' , '20' ,'2021-09-03'))
 
@@ -125,7 +135,14 @@ class tables():
     def close(self):
         self.conn.close()
 
+    def putdatacsv(self,data):
+        with open("/etc/gateway/output.csv","a") as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(data)
+
 p1=tables()
+#p1.putdatacsv(["ff:ff","-80","1","BLE","yesss"])
+#p1.putdatacsv(["ff:ee","-80","1","BLE","yesss"])
 #print(p1.getdata('Node'))
 #p1.calltable()
 

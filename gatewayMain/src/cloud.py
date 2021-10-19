@@ -3,12 +3,10 @@
 Date:28/08/2021
 '''
 #import paho.mqtt.client as mqtt
-import ssl, random
-import time
+import ssl
 import json
-import sys
 import requests
-from datetime import datetime
+
 
 #from node import app_node
 
@@ -102,7 +100,7 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
             print("Connection failed! Please try again...")
             exit(1)
 
-def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
+def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG):
     topic=t
     if SERVER_TYPE == 'custom':
         topic = 'Msg'
@@ -141,22 +139,22 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
     #time.sleep(5)
     #print(connflag)
     print('connflag',connflag,'pubflag',pubflag)
-    if connflag == True and pubflag == 'True' and topic!='':
+    if connflag == True and pubflag == 'Active' and topic!='':
         print("Actually started")
 
         #Internet connection handling along with publishing data
         try:
+            requests.head('http://www.google.com/', timeout=3)
+            data=json.dumps(msg)
             if sensorType=='Accelerometer':
                 topic=topic+'/acc'
             elif sensorType=='Temperature':
                 topic=topic+'/temp'
-            requests.head('http://www.google.com/', timeout=3)
-            data=json.dumps(msg)
             rt = client.publish(topic,data,qos=0)
             print("Publishing Data...", rt)
             print(sensorType,value)
-            mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
-            time.sleep(0.5)
+            if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+                mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
 
             return True
 
@@ -165,4 +163,5 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE):
             return False
     else:
         print("waiting...")
-        mainBuffer['dbCmnd'].append({'table':'OfflineData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
+        if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+            mainBuffer['dbCmnd'].append({'table':'OfflineData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})

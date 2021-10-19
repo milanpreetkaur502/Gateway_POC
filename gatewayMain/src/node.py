@@ -1,11 +1,66 @@
 import json
 from bluepy.btle import Scanner, DefaultDelegate , UUID, Peripheral
+from multiprocessing import Process, Event
 from time import sleep
 import struct
 import sys
 from datetime import datetime
 import subprocess
 
+class BLEScanner:
+    def __init__(self):
+        self.scanner = Scanner()
+
+        self.stop_event = Event()
+
+    def startScan(self):
+
+        self.stop_event.clear()
+
+        self.process = Process(target=self.scan, args = ())
+        self.process.start()
+        return self
+
+    def startP(self,task,mode,condition,mac,val,srv,ch):
+
+        self.stop_event.clear()
+
+        self.process = Process(target=self.peripheral, args = (task,mode,condition,mac,val,srv,ch))
+        self.process.start()
+        return self
+
+    def scan(self):
+
+        if self.stop_event.is_set():
+            return
+
+        self.devices = self.scanner.scan(2, passive=True)
+        return self.devices
+        '''
+        for dev in self.devices:
+            print("Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi))
+            for (adtype, desc, value) in dev.getScanData():
+                print("%s  %s = %s" % (adtype, desc, value))
+        '''
+
+    def peripheral(self,task,mode,condition,mac,val,srv,ch):
+        for addr in mac:
+            try:
+                p = Peripheral(addr,"random")
+                serv=p.getServiceByUUID(srv)
+                char=serv.getCharacteristics(ch)[0]
+                char.write(struct.pack('B',0x01))
+                print("writing char:",addr)
+                p.disconnect()
+            except Exception as e:
+                print(e)
+                print("Exception:",addr)
+            i+=1
+            sleep(3)
+
+
+    def stop(self):
+        self.stop_event.set()
 
 def hextodec(value):
     return -(value & 0x8000) | (value & 0x7fff) #coversion from signed hex to decimal
@@ -27,7 +82,6 @@ def writePeripheral(mac,service,char,config):
 
 def app_node(SCAN_TIME):
 
-
     #BLE Section
     bt=subprocess.check_output(['hciconfig'])#check for bluetooth status
     if b'UP' in bt:
@@ -36,8 +90,10 @@ def app_node(SCAN_TIME):
         BT_STATUS='Inactive'
         print('Node not connected')
     if BT_STATUS=='Active':
-        lescan=Scanner(0)
-        devices=lescan.scan(int(SCAN_TIME))
+        #lescan=Scanner(0)
+        #devices=lescan.scan(int(SCAN_TIME))
+        c = Scanner()
+        devices=c.scan(SCAN_TIME, passive=True)
         payload=[]
         devacc=0
         devtemp=0

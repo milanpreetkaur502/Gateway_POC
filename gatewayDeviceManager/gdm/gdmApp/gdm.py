@@ -1,16 +1,20 @@
 from flask import render_template, request, redirect, session, url_for  #necessary Imports
 import subprocess   #module import for dealing with execution of console command
 from gdmApp import app
-from .database import p1 as db
 import os
-
-path=(__file__).split('/')
-path.pop()
-path.pop()
-path.pop()
-path="/".join(path)
-path=path+'/certUploads/'
-
+from .configHandler import ConfigHandler
+confObject=ConfigHandler()
+#data=confObject.getDataForMain()
+#STORAGEFLAG=data['STORAGEFLAG']
+#LOGGINGFLAG=data['LOGGINGFLAG']
+#if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+#    from .database import p1 as db
+path='/etc/gateway/certUploads/'
+ip=""
+try:
+    ip=os.popen('ip addr show eth1').read().split("inet ")[1].split("/")[0]
+except:
+    ip='Retrieving'
 
 @app.route('/login',methods=['GET','POST'])   #route for handling login
 def login():
@@ -30,37 +34,55 @@ def logOut():
 @app.route('/')
 def home():
     if 'logedIn' in session:                #verifying user is logedIn or not
-        nodeData=db.getdata('Node')
-        nodeData={'scanRate':nodeData[0][1],'status':nodeData[0][2]}
-        cloudData=db.getdata('Cloud')
-        server=cloudData[0][1]
+        node=confObject.getData("node")
+        nodeData={'scanRate':node["SCAN_TIME"],'status':node["N_STATUS"]}
+        cloud=confObject.getData("cloud")
+        server=cloud["SERVER_TYPE"]
         serverType=''
         if server=='custom':
             serverType='Unsecured'
         else:
             serverType='Secured'
-        cloudData={'server':server,'serverType':serverType,'hostAdd':cloudData[0][2],'port':cloudData[0][3],'status':cloudData[0][4],'topic':cloudData[0][5],'pubFlag':cloudData[0][6]}
-        return render_template('home.html',nodeData=nodeData,cloudData=cloudData)
+        cloudData={'server':server,'serverType':serverType,'hostAdd':cloud["HOST"],'port':cloud["PORT"],'status':cloud['C_STATUS'],'topic':cloud['publishTopic'],'pubFlag':cloud['PUBFLAG']}
+        deviceData=confObject.getData("device")
+        return render_template('home.html',nodeData=nodeData,cloudData=cloudData,data=deviceData,ip=ip)
     return redirect(url_for('login'))
 
-@app.route('/deviceConfig')
+@app.route('/deviceConfig',methods=['GET'])
 def deviceConfig():
     if 'logedIn' in session:
-        return render_template('deviceConfig.html')
+        data=confObject.getData("device")
+        return render_template('deviceConfig.html',ip=ip,data=data)
     return redirect(url_for('login'))
+
+@app.route('/deviceConfig/logSwitch',methods=['POST'])
+def logSwitcher():
+    if request.method=="POST":
+        if 'logStatus' in request.form:
+            confObject.updateData('device',{'LOGGINGFLAG':'Active'})
+            subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+            subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+        else:
+            confObject.updateData('device',{'LOGGINGFLAG':'Inactive'})
+            subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+            subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+    return redirect(url_for('deviceConfig'))
+
 
 @app.route('/cloudConfig',methods=['GET','POST'])
 def cloudConfig():
     if 'logedIn' in session:
         if request.method=="POST":     #need db integration for here
             if 'status' in request.form:
-                db.updatetable('Cloud','C_Status',request.form['status'])
+                confObject.updateData('cloud',{'C_STATUS':request.form['status']})
+                subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+                subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
             server=request.form.get('server')
             if 'server' in request.form:
-                db.updatetable('Cloud','ServerType',server)
-                db.updatetable('Cloud','Ip',request.form['hostAdd'])
-                db.updatetable('Cloud','Port',request.form['port'])
-                db.updatetable('Cloud','PUBFLAG','False')
+                di={'SERVER_TYPE':server,'HOST':request.form['hostAdd'],'PORT':request.form['port'],'PUBFLAG':'False'}
+                confObject.updateData('cloud',di)
+                subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+                subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
             if server=='aws':
                 root=request.files['rootFile']                  #accessing the uploaded files
                 pvtKey=request.files['pvtKey']
@@ -68,14 +90,14 @@ def cloudConfig():
                 root.save(path+'root.pem')        #saving the uploaded files
                 pvtKey.save(path+'key.pem.key')
                 iotCert.save(path+'cert.pem.crt')
-        cloudData=db.getdata('Cloud')
-        server=cloudData[0][1]
+        cloud=confObject.getData("cloud")
+        server=cloud['SERVER_TYPE']
         serverType=''
         if server=='custom':
             serverType='Unsecured'
         else:
             serverType='Secured'
-        cloudData={'server':server,'serverType':serverType,'hostAdd':cloudData[0][2],'port':cloudData[0][3],'status':cloudData[0][4],'topic':cloudData[0][5],'pubFlag':cloudData[0][6]}
+        cloudData={'server':server,'serverType':serverType,'hostAdd':cloud["HOST"],'port':cloud["PORT"],'status':cloud['C_STATUS'],'topic':cloud['publishTopic'],'pubFlag':cloud['PUBFLAG']}
         return render_template('cloudConfig.html',cloudData=cloudData)
     return redirect(url_for('login'))
 
@@ -83,18 +105,34 @@ def cloudConfig():
 def nodeConfig():
     if 'logedIn' in session:
         if request.method=="POST":
-            db.updatetable('Node','ScaneRate',request.form['scanRate'])
-            db.updatetable('Node','N_Status',request.form['status'])
-        nodeData=db.getdata('Node')
-        nodeData={'scanRate':nodeData[0][1],'status':nodeData[0][2]}
+            confObject.updateData('node',{'SCAN_TIME':request.form['scanRate'],'N_STATUS':request.form['status']})
+            subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+            subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+        nodeData=confObject.getData('node')
+        nodeData={'scanRate':nodeData['SCAN_TIME'],'status':nodeData['N_STATUS']}
         return render_template('nodeConfig.html',nodeData=nodeData)
     return redirect(url_for('login'))
 
-@app.route('/netConfig')
+@app.route('/netConfig',methods=['GET','POST'])
 def networkConfig():
     if 'logedIn' in session:
+        if request.method=="POST":
+            ssid=request.form['ssid']
+            password=""
+            if 'security' in request.form:
+                password="none"
+                security="none"
+
+            else:
+                password=request.form["passForWifi"]
+                security="psk"
+            confObject.updateData("network",{"TYPE":"WIFI","SSID":ssid,"PASSPHRASE":password,"SECURITY":security})
+            subprocess.call(["/usr/sbin/control_scripts/wifi_control.sh",ssid,password,security])
         return render_template('networkConfig.html')
     return redirect(url_for('login'))
+
+    subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+    subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
 
 @app.route('/debug')
 def debug():
@@ -120,13 +158,8 @@ def reports():
 
 @app.route('/dataManager')
 def dataManager():
-    if 'logedIn' in session: 
-        os.system('lsblk -o mountpoint>withUsb.txt')
-        data=subprocess.Popen(['diff','withoutUsb.txt','withUsb.txt'],stdout=subprocess.PIPE).communicate()[0]      #executing the command and getting the data into string format
-        data=data.decode('utf-8')                                                       #decoding the binary the data into string
-        data=data.split('\n')[1::2]
-        if not data:
-            data.append("No device connected")
+    if 'logedIn' in session:
+        data=db.getdata('HistoricalData')
         return render_template('dataManager.html',data=data,type='Historical Data')
     return redirect(url_for('login'))
 
