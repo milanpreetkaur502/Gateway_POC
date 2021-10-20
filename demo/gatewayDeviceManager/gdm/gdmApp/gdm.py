@@ -127,7 +127,7 @@ def networkConfig():
                 password=request.form["passForWifi"]
                 security="psk"
             confObject.updateData("network",{"TYPE":"WIFI","SSID":ssid,"PASSPHRASE":password,"SECURITY":security})
-            subprocess.call(["/usr/sbin/control_scripts/wifi_control.sh",ssid,password,security])
+            subprocess.call(["/usr/sbin/control_scripts/restart_wifi.sh"])
         return render_template('networkConfig.html')
     return redirect(url_for('login'))
 

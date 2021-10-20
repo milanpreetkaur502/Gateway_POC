@@ -1,36 +1,41 @@
 #!/bin/bash
 ​
-SSID=$1
-PWD=$2
-security=$3
+a=`jq '.network.SSID' /etc/gateway/config.conf`
+b=`jq '.network.PASSPHRASE' /etc/gateway/config.conf`
+c=`jq '.network.SECURITY' /etc/gateway/config.conf`
+
+
+wifissid=`echo $a | sed 's/^.//' | sed 's/.$//'`
+wifipassword=`echo $b | sed 's/^.//' | sed 's/.$//'`
+wifisecurity=`echo $c | sed 's/^.//' | sed 's/.$//'`
 ​
 connmanctl scan wifi
-TEST=`connmanctl services | grep $SSID | awk '{print $1}'`
+TEST=`connmanctl services | grep $wifissid | awk '{print $1}'`
 ​
-if [[ $SSID == $TEST ]];then
-HASH=`connmanctl services | grep $SSID | awk '{print $2}'`
+if [[ $wifissid == $TEST ]];then
+HASH=`connmanctl services | grep $wifissid | awk '{print $2}'`
 else
-HASH=`connmanctl services | grep $SSID | awk '{print $3}'`
+HASH=`connmanctl services | grep $wifissid | awk '{print $3}'`
 fi
-echo "found $SSID with hash $HASH"
+echo "found $wifissid with hash $HASH"
 ​
 ​
-if [[ $security == "psk" ]];then
+if [[ $wifisecurity == "psk" ]];then
     
     echo "[service_$HASH]
     Type=wifi
-    Name=$SSID
-    Passphrase=$PWD
-    AutoConnect = True" > /var/lib/connman/$SSID-psk.config
+    Name=$wifissid
+    Passphrase=$wifipassword
+    AutoConnect = True" > /var/lib/connman/$wifissid-psk.config
 ​
     connmanctl connect $HASH
 ​
-elif [[ $security == "none" ]];then
+elif [[ $wifisecurity == "none" ]];then
     
     echo "[service_$HASH]
     Type=wifi
-    Name=$SSID
-    AutoConnect = True" > /var/lib/connman/$SSID-none.config
+    Name=$wifissid
+    AutoConnect = True" > /var/lib/connman/$wifissid-none.config
     
     connmanctl connect $HASH
     
