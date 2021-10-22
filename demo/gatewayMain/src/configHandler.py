@@ -39,4 +39,6 @@ class ConfigHandler():
     def networkWatcher(self):
         ct=datetime.datetime.now()
         with open(f"/etc/gateway/network/network.conf",'a') as file:
-            file.write("\n","Network change triggered at: ",ct)
+            file.write("\n")
+            file.write("Network change triggered at: ")
+            file.write(ct)
