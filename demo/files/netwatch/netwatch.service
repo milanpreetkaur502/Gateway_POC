@@ -1,0 +1,12 @@
+
+[Unit]
+Description=network restarter
+StartLimitIntervalSec=10
+StartLimitBurst=5
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'systemctl restart wifiControl.service && systemctl restart app.service && systemctl restart job.service'
+
+[Install]
+WantedBy=multi-user.target

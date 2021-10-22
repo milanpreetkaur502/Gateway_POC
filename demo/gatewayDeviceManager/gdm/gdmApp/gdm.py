@@ -12,7 +12,7 @@ confObject=ConfigHandler()
 path='/etc/gateway/certUploads/'
 ip=""
 try:
-    ip=os.popen('ip addr show eth1').read().split("inet ")[1].split("/")[0]
+    ip=os.popen('ip addr show eth0').read().split("inet ")[1].split("/")[0]
 except:
     ip='Retrieving'
 
@@ -60,12 +60,12 @@ def logSwitcher():
     if request.method=="POST":
         if 'logStatus' in request.form:
             confObject.updateData('device',{'LOGGINGFLAG':'Active'})
-            subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
-            subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+            #subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+            #subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
         else:
             confObject.updateData('device',{'LOGGINGFLAG':'Inactive'})
-            subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
-            subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+            #subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+            #subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
     return redirect(url_for('deviceConfig'))
 
 
@@ -75,14 +75,14 @@ def cloudConfig():
         if request.method=="POST":     #need db integration for here
             if 'status' in request.form:
                 confObject.updateData('cloud',{'C_STATUS':request.form['status']})
-                subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
-                subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+                #subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+                #subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
             server=request.form.get('server')
             if 'server' in request.form:
                 di={'SERVER_TYPE':server,'HOST':request.form['hostAdd'],'PORT':request.form['port'],'PUBFLAG':'False'}
                 confObject.updateData('cloud',di)
-                subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
-                subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+                #subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+                #subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
             if server=='aws':
                 root=request.files['rootFile']                  #accessing the uploaded files
                 pvtKey=request.files['pvtKey']
@@ -106,8 +106,8 @@ def nodeConfig():
     if 'logedIn' in session:
         if request.method=="POST":
             confObject.updateData('node',{'SCAN_TIME':request.form['scanRate'],'N_STATUS':request.form['status']})
-            subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
-            subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+            #subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+            #subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
         nodeData=confObject.getData('node')
         nodeData={'scanRate':nodeData['SCAN_TIME'],'status':nodeData['N_STATUS']}
         return render_template('nodeConfig.html',nodeData=nodeData)
@@ -127,12 +127,13 @@ def networkConfig():
                 password=request.form["passForWifi"]
                 security="psk"
             confObject.updateData("network",{"TYPE":"WIFI","SSID":ssid,"PASSPHRASE":password,"SECURITY":security})
-            subprocess.call(["/usr/sbin/control_scripts/restart_wifi.sh"])
+            #subprocess.call(["/usr/sbin/control_scripts/restart_wifi.sh"])
+            confObject.networkWatcher()
         return render_template('networkConfig.html')
     return redirect(url_for('login'))
 
-    subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
-    subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+    #subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+    #subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
 
 @app.route('/debug')
 def debug():

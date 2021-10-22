@@ -152,8 +152,8 @@ def parse(jobconfig,client):
                 confObject.updateData("device",{'LOCATION':jobconfig['execution']['jobdocument']['gateway']['deviceLocation']})
             if jobconfig['execution']['jobdocument']['gateway']['deviceGroup']!="":
                 confObject.updateData("device",{'GROUP':jobconfig['execution']['jobdocument']['gateway']['deviceGroup']})
-            subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
-            subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+            #subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+            #subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
 
         if jobconfig['execution']['jobdocument']['gateway']['operation']=='read':
             d=confObject.getData("device")

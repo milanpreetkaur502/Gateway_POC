@@ -1,0 +1,6 @@
+[Path]
+Unit=confwatch.service
+PathModified=/etc/gateway/config
+
+[Install]
+WantedBy=multi-user.target

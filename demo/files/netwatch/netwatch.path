@@ -1,0 +1,6 @@
+[Path]
+Unit=netwatch.service
+PathModified=/etc/gateway/network
+
+[Install]
+WantedBy=multi-user.target

@@ -66,7 +66,7 @@ automount() {
 		logger "mount.sh/automount" "Auto-mount of [/media/$name] successful"
 		touch "/tmp/.automount-$name"
 	fi
-        jq --arg a "Active" '.device.STORAGEFLAG = $a' /etc/gateway/config.conf > "tmpt" && mv "tmpt" /etc/gateway/config.conf
+        jq --arg a "Active" '.device.STORAGEFLAG = $a' /etc/gateway/config/gateway.conf > "tmpt" && mv "tmpt" /etc/gateway/config/gateway.conf
 }
 	
 rm_dir() {
@@ -109,6 +109,6 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	# Remove empty directories from auto-mounter
 	name="`basename "$DEVNAME"`"
 	#test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
-        jq --arg a "Inactive" '.device.STORAGEFLAG = $a' /etc/gateway/config.conf > "tmpt" && mv "tmpt" /etc/gateway/config.conf
+        jq --arg a "Inactive" '.device.STORAGEFLAG = $a' /etc/gateway/config/gateway.conf > "tmpt" && mv "tmpt" /etc/gateway/config/gateway.conf
         
 fi

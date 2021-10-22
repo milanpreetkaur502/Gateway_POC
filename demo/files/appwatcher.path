@@ -1,6 +1,0 @@
-[Path]
-Unit=appwatcher.service
-PathModified=/opt/gateway
-
-[Install]
-WantedBy=multi-user.target

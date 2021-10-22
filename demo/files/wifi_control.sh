@@ -1,7 +1,8 @@
 #!/bin/bash
-a=`jq '.network.SSID' /etc/gateway/config.conf`
-b=`jq '.network.PASSPHRASE' /etc/gateway/config.conf`
-c=`jq '.network.SECURITY' /etc/gateway/config.conf`
+chmod 777 /var/lib/connman
+a=`jq '.network.SSID' /etc/gateway/config/gateway.conf`
+b=`jq '.network.PASSPHRASE' /etc/gateway/config/gateway.conf`
+c=`jq '.network.SECURITY' /etc/gateway/config/gateway.conf`
 wifissid=`echo $a | sed 's/^.//' | sed 's/.$//'`
 wifipassword=`echo $b | sed 's/^.//' | sed 's/.$//'`
 wifisecurity=`echo $c | sed 's/^.//' | sed 's/.$//'`
