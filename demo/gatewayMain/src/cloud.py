@@ -13,7 +13,8 @@ import requests
 path=(__file__).split('/')
 path.pop()
 path="/".join(path)
-path=path+'/certUploads/'
+path='/etc/gateway/certUploads/'
+
 print(path)
 
 IoT_protocol_name = "x-amzn-mqtt-ca"

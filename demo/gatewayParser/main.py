@@ -113,12 +113,12 @@ def parse(jobconfig,client):
                     temptopic=topic[j]
                     tempcategory=category[j]
                     tempstatus=status[j]
-                    if temptopic=='publishTopic' and tempstatus=='activate':
+                    if tempcategory=='publishTopic' and tempstatus=='activate':
                         confObject.updateData("cloud",{"PUBFLAG":"Active"})
                     confObject.updateData("cloud",{tempcategory:temptopic})
                     j+=1
-                subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
-                subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
+                #subprocess.run(['/usr/sbin/control_scripts/restart_app.sh'])
+                #subprocess.run(['/usr/sbin/control_scripts/restart_job.sh'])
 
         if jobconfig['execution']['jobdocument']['cloud']['operation']=="read":
             c=confObject.getData("cloud")
