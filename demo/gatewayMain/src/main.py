@@ -143,6 +143,7 @@ if __name__=='__main__':
     prev_PORT=''
     while True:
         if (prev_HOST!=HOST or prev_PORT!=PORT) and C_STATUS=='Active':
+            s=1
             print("-"*20)
             print("Server setting")
             if chgEvent.isSet():
@@ -152,14 +153,15 @@ if __name__=='__main__':
                 client.disconnect()
             client = mqtt.Client()
             print("Connecting to cloud...")
-            funInitilise(client,SERVER_TYPE,HOST,PORT)
-            prev_HOST=HOST
-            prev_PORT=PORT
-            if SERVER_TYPE == 'aws':
-                client.subscribe("$aws/things/Test_gateway/jobs/notify-next",1)
-            client.loop_start()
-            chgEvent.set()
-            print("-"*20)
+            s=funInitilise(client,SERVER_TYPE,HOST,PORT)
+            if s!=0:
+                prev_HOST=HOST
+                prev_PORT=PORT
+                if SERVER_TYPE == 'aws':
+                    client.subscribe("$aws/things/Test_gateway/jobs/notify-next",1)
+                client.loop_start()
+                chgEvent.set()
+                print("-"*20)
         print("main loop")
         time.sleep(1)
     #-------------------------------------------------------------------------------------------------

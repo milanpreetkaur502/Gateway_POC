@@ -193,16 +193,19 @@ if __name__ == "__main__":
 
                 print("Connecting to cloud...")
                 client.tls_set(root_ca,certfile = public_crt,keyfile = private_key,cert_reqs = ssl.CERT_REQUIRED,tls_version = ssl.PROTOCOL_TLSv1_2,ciphers = None)
-                prev_HOST=HOST
-                prev_PORT=PORT
-                client.message_callback_add(topic, job)
-                client.connect(HOST, PORT, keepalive=60)
-                client.subscribe(topic, 0)  #subscibe to the topic
-                client.loop_start()
-                print("-"*20)
-                l='connected'
+                try:
+                    client.message_callback_add(topic, job)
+                    client.connect(HOST, PORT, keepalive=60)
+                    client.subscribe(topic, 0)  #subscibe to the topic
+                    client.loop_start()
+                    print("-"*20)
+                    l='connected'
+                    prev_HOST=HOST
+                    prev_PORT=PORT
+                except:
+                    print("Error in connection!")
         else:
-            print("C_STATUS not active or server not AWS")
+            #print("C_STATUS not active or server not AWS")
         time.sleep(1)
-        print("Script running! Status: ",l)
+        #print("Script running! Status: ",l)
 #--------------- End of script --------------

@@ -88,6 +88,7 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
                     ciphers = None)
 
                 client.connect(HOST, port = int(PORT), keepalive=60)
+                return 1
 
             elif int(PORT) == 443:
                 ssl_context = ssl.create_default_context()
@@ -97,9 +98,10 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
 
                 client.tls_set_context(context = ssl_context)
                 client.connect(HOST, port = int(PORT), keepalive=60)
+                return 1
         except:
             print("Connection failed! Please try again...")
-            exit(1)
+            return 0
 
 def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG):
     topic=t
@@ -152,8 +154,8 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGF
             elif sensorType=='Temperature':
                 topic=topic+'/temp'
             rt = client.publish(topic,data,qos=0)
-            print("Publishing Data...", rt)
-            print(sensorType,value)
+            #print("Publishing Data...", rt)
+            #print(sensorType,value)
             if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
                 mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
 
@@ -163,6 +165,6 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGF
             print("Connection Lost! Please wait for some time...")
             return False
     else:
-        print("waiting...")
+        #print("waiting...")
         if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
             mainBuffer['dbCmnd'].append({'table':'OfflineData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
