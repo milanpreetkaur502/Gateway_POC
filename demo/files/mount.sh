@@ -67,6 +67,7 @@ automount() {
 		touch "/tmp/.automount-$name"
 	fi
         jq --arg a "Active" '.device.STORAGEFLAG = $a' /etc/gateway/config/gateway.conf > "tmpt" && mv "tmpt" /etc/gateway/config/gateway.conf
+        chmod 777 /etc/gateway/config/gateway.conf
 }
 	
 rm_dir() {
@@ -110,5 +111,6 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	name="`basename "$DEVNAME"`"
 	#test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
         jq --arg a "Inactive" '.device.STORAGEFLAG = $a' /etc/gateway/config/gateway.conf > "tmpt" && mv "tmpt" /etc/gateway/config/gateway.conf
+        chmod 777 /etc/gateway/config/gateway.conf
         
 fi
