@@ -136,7 +136,7 @@ class tables():
         self.conn.close()
 
     def putdatacsv(self,data):
-        with open("/etc/gateway/output.csv","a") as csvfile:
+        with open("/media/flashdrive/output.csv","a") as csvfile:
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(data)
 
