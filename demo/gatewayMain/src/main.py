@@ -30,9 +30,9 @@ def cloud():
                     }
 
                 if SERVER_TYPE == 'custom':
-                    publishData(client,dt,TOPIC,'True',mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG)
+                    publishData(client,dt,PUBLISH_TOPIC,'True',mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG)
                 elif SERVER_TYPE == 'aws':
-                    publishData(client,dt,TOPIC,PUBFLAG,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG)
+                    publishData(client,dt,PUBLISH_TOPIC,PUBFLAG,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG)
         time.sleep(0.01)
 
 def dbMaster():
@@ -46,15 +46,11 @@ def dbMaster():
 
 
             if job['operation']=='write':
-                if table=='HistoricalData':
-                    db.putdatacsv(value)
+                if table=='HistoricalData' and STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+                    confObject.putdatacsv(value)
                 if table=='OfflineData':
                     db.putdata(table,value)
 
-            if job['operation']=='update':
-                if table=='Cloud':
-                    db.updatetable(table,job['column'],job['value'])
-                    confObject.updateData('cloud',)
 
         time.sleep(1)
 
@@ -64,10 +60,13 @@ def nodeMaster():
     while True:
 
         if C_STATUS=='Active' and N_STATUS=='Active':
-            payl=app_node(int(SCAN_TIME))
-            if payl!=None:
-                q.append(payl)
-                print(len(q))
+            try:
+                payl=app_node(int(SCAN_TIME))
+                if payl!=None:
+                    q.append(payl)
+                    print(len(q))
+            except:
+                time.sleep(1)
         time.sleep(1)
 
 #def main():
@@ -91,37 +90,39 @@ if __name__=='__main__':
     global BT_STATUS
     global SCAN_TIME
     global SERVER_TYPE
-    global TOPIC
+    global PUBLISH_TOPIC
     global PUBFLAG
     global STORAGEFLAG
     global LOGGINGFLAG
+    global LOG_TOPIC
     ID=confData['ID']
     NAME=confData['NAME']
     SERVER_TYPE=confData['SERVER_TYPE']
     HOST=confData['HOST']
     PORT=int(confData['PORT'])
     C_STATUS=confData['C_STATUS']
-    TOPIC=confData['TOPIC']
+    PUBLISH_TOPIC=confData['PUBLISH_TOPIC']
     PUBFLAG=confData['PUBFLAG']
     N_STATUS=confData['N_STATUS']
     SCAN_TIME=confData['SCAN_TIME']
     STORAGEFLAG=confData['STORAGEFLAG']
     LOGGINGFLAG=confData['LOGGINGFLAG']
+    LOG_TOPIC=confData['LOG_TOPIC']
     I_STATUS=''    #why these variables are here
     BT_STATUS=''
     print("SERVER_TYPE->",SERVER_TYPE)
     print("HOST->",HOST)
     print("PORT->",PORT)
     print("C_STATUS->",C_STATUS)
-    print("TOPIC->",TOPIC)
+    print("PUBLISH_TOPIC->",PUBLISH_TOPIC)
     print("PUBFLAG->",PUBFLAG)
     print("N_STATUS->",N_STATUS)
     print("SCAN_TIME->",SCAN_TIME)
     print("LOGGINGFLAG->",LOGGINGFLAG)
     print("STORAGEFLAG->",STORAGEFLAG)
 
-    if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
-        from gatewayapp.database import p1 as db
+    #if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
+        #from gatewayapp.database import p1 as db
 
     #-------------------------------------------------------------------------------------------------
 
@@ -153,15 +154,21 @@ if __name__=='__main__':
                 client.disconnect()
             client = mqtt.Client()
             print("Connecting to cloud...")
-            s=funInitilise(client,SERVER_TYPE,HOST,PORT)
-            if s!=0:
-                prev_HOST=HOST
-                prev_PORT=PORT
-                if SERVER_TYPE == 'aws':
-                    client.subscribe("$aws/things/Test_gateway/jobs/notify-next",1)
+            try:
+                funInitilise(client,SERVER_TYPE,HOST,PORT)
                 client.loop_start()
                 chgEvent.set()
                 print("-"*20)
-        print("main loop")
+                prev_HOST=HOST
+                prev_PORT=PORT
+                now=datetime.now()
+                time_stamp=now.strftime("%m/%d/%Y, %H:%M:%S")
+                client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"App","Log":{"Msg":"App main started and connected to cloud.","SERVER_TYPE":SERVER_TYPE,"HOST":HOST,"PORT":PORT,"C_STATUS":C_STATUS,"PUBLISH_TOPIC":PUBLISH_TOPIC,"PUBFLAG":PUBFLAG,"N_STATUS":N_STATUS,"SCAN_TIME":SCAN_TIME,"LOGGINGFLAG":LOGGINGFLAG,"STORAGEFLAG":STORAGEFLAG}}),0)
+            except:
+                print('could not connect to cloud! trying again...')
+                time.sleep(1)
+        #print("main loop")
         time.sleep(1)
     #-------------------------------------------------------------------------------------------------
+#client.publish(jobstatustopic, json.dumps({ "status" : "SUCCEEDED"}),0)
+#"SERVER_TYPE->":SERVER_TYPE,"HOST->":HOST,"PORT->":PORT,"C_STATUS->":C_STATUS,"PUBLISH_TOPIC->":PUBLISH_TOPIC,"PUBFLAG->":PUBFLAG,"N_STATUS->":N_STATUS,"SCAN_TIME->":SCAN_TIME,"LOGGINGFLAG->":LOGGINGFLAG,"STORAGEFLAG->":STORAGEFLAG

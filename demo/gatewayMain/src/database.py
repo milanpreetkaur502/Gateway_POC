@@ -135,10 +135,7 @@ class tables():
     def close(self):
         self.conn.close()
 
-    def putdatacsv(self,data):
-        with open("/media/flashdrive/output.csv","a") as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerow(data)
+    
 
 p1=tables()
 #p1.putdatacsv(["ff:ff","-80","1","BLE","yesss"])

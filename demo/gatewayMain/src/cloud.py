@@ -88,7 +88,6 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
                     ciphers = None)
 
                 client.connect(HOST, port = int(PORT), keepalive=60)
-                return 1
 
             elif int(PORT) == 443:
                 ssl_context = ssl.create_default_context()
@@ -98,10 +97,8 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
 
                 client.tls_set_context(context = ssl_context)
                 client.connect(HOST, port = int(PORT), keepalive=60)
-                return 1
         except:
             print("Connection failed! Please try again...")
-            return 0
 
 def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG):
     topic=t

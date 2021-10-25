@@ -1,0 +1,52 @@
+{"execution":
+ {"jobId":"111",
+"jobdocument":
+
+{
+        "jobName":"gateway",	
+	"cloud":{
+                "enable":"active",
+                "operation":"write",
+                "topic":["beacon","testjob","beacon/offline","log","ota"],
+                "category":["PUBLISH_TOPIC","JOB_TOPIC","OFFLINE_TOPIC","LOG_TOPIC","OTA_TOPIC"],
+                "status":["activate","activate","activate","activate","activate"],
+                "task":"configTopic",
+                "interval":"5000",
+                "QoS":[0,0,0,0,0],
+                "heartbeatInterval":"1000"
+            },
+    "node":{
+                "enable":"inactive",
+                "operation":"write",
+                "mac":["ff:11:22:33:44:ff"],              
+                "filterType":"addr",
+                "filtervalue":"random",
+                "service":["AC23BA"],
+                "char":["A1CB23"],
+                "data":["Active"],
+                "topic":["topic"]
+            },
+    "db":{
+            "enable":"inactive",
+            "operation":"publishHistorical",   
+            "topic":"topic",
+            "range":""
+         },
+    "gateway":{
+                "enable":"active",
+                "operation":"write",
+                "scanWindow":"5",
+                "deviceName":"AwadhGateway",
+                "deviceId":"1234567891011",
+                "deviceLocation":"IIT Ropar",
+                "deviceGroup":"1234"
+                
+             },
+     "ota":{
+              "enable":"inacitve",
+              "operation":"ota",
+              "deviceId":"1234",
+              "url":"8.8.8.8",
+              "appName":"cloud"
+            }
+}}}

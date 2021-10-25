@@ -13,7 +13,8 @@ import requests
 path=(__file__).split('/')
 path.pop()
 path="/".join(path)
-path=path+'/certUploads/'
+path='/etc/gateway/certUploads/'
+
 print(path)
 
 IoT_protocol_name = "x-amzn-mqtt-ca"
@@ -98,7 +99,6 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
                 client.connect(HOST, port = int(PORT), keepalive=60)
         except:
             print("Connection failed! Please try again...")
-            exit(1)
 
 def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG):
     topic=t
@@ -151,8 +151,8 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGF
             elif sensorType=='Temperature':
                 topic=topic+'/temp'
             rt = client.publish(topic,data,qos=0)
-            print("Publishing Data...", rt)
-            print(sensorType,value)
+            #print("Publishing Data...", rt)
+            #print(sensorType,value)
             if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
                 mainBuffer['dbCmnd'].append({'table':'HistoricalData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})
 
@@ -162,6 +162,6 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGF
             print("Connection Lost! Please wait for some time...")
             return False
     else:
-        print("waiting...")
+        #print("waiting...")
         if STORAGEFLAG=='Active' and LOGGINGFLAG=='Active':
             mainBuffer['dbCmnd'].append({'table':'OfflineData','operation':'write','value':('1',mac,rssi,str(value),str(sensorType),t_utc),'source':'cloud'})

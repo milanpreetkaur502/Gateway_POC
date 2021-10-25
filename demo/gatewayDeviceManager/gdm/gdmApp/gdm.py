@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, session, url_for  #necessa
 import subprocess   #module import for dealing with execution of console command
 from gdmApp import app
 import os
-from .configHandler import ConfigHandler
+from gatewayapp.configHandler import ConfigHandler
 confObject=ConfigHandler()
 #data=confObject.getDataForMain()
 #STORAGEFLAG=data['STORAGEFLAG']
@@ -15,6 +15,12 @@ try:
     ip=os.popen('ip addr show eth0').read().split("inet ")[1].split("/")[0]
 except:
     ip='Retrieving'
+
+mac=""
+try:
+    mac=os.popen('ip addr show eth0').read().split("link/ether ")[1]
+except:
+    mac='Retrieving'
 
 @app.route('/login',methods=['GET','POST'])   #route for handling login
 def login():
