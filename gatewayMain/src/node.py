@@ -88,7 +88,7 @@ def app_node(SCAN_TIME):
         BT_STATUS='Active'
     else:
         BT_STATUS='Inactive'
-        print('Node not connected')
+        print('BLE not active')
     if BT_STATUS=='Active':
         #lescan=Scanner(0)
         #devices=lescan.scan(int(SCAN_TIME))
@@ -97,6 +97,7 @@ def app_node(SCAN_TIME):
         payload=[]
         devacc=0
         devtemp=0
+        devcount=0
         for dev in devices:
             dev_name=dev.getValueText(9)
             if dev_name=='Tag':
@@ -113,6 +114,7 @@ def app_node(SCAN_TIME):
                     xx={'TYPE':'Beacon','MAC':dev.addr,'MACTYPE':dev.addrType,'RSSI':dev.rssi,'value':man,'sensorType':type,'Timestamp':int(datetime.timestamp(now))}
                     payload.append(xx)
                     devacc+=1
+
                 except:
                     pass
 
@@ -126,10 +128,11 @@ def app_node(SCAN_TIME):
                     devtemp+=1
                 except:
                     pass
+        devcount=devacc+devtemp
         print('accelerometer device count ',devacc)
         print('temperature device count ',devtemp)
         SCAN_STATUS='Inactive'
-        return payload
+        return payload,BT_STATUS
 
 
 '''

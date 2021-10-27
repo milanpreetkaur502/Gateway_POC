@@ -61,11 +61,20 @@ def nodeMaster():
 
         if C_STATUS=='Active' and N_STATUS=='Active':
             try:
-                payl=app_node(int(SCAN_TIME))
+                payl,bt_status=app_node(int(SCAN_TIME))
                 if payl!=None:
                     q.append(payl)
-                    print(len(q))
-            except:
+                    #print(len(q))
+                else:
+                    now=datetime.now()
+                    time_stamp=now.strftime("%m/%d/%Y, %H:%M:%S")
+                    client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"App","Log":{"Msg":"No beacons found"}}),0)
+                if bt_status=="Inactive":
+                    now=datetime.now()
+                    time_stamp=now.strftime("%m/%d/%Y, %H:%M:%S")
+                    client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"App","Log":{"Msg":"BLE not active"}}),0)
+            except Exception as e:
+                print(e)
                 time.sleep(1)
         time.sleep(1)
 
