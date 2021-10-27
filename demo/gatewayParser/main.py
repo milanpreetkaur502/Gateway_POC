@@ -170,9 +170,9 @@ def parse(jobconfig,client):
             #    pubflag=False
             #led config
         client.publish(jobstatustopic, json.dumps({ "status" : "SUCCEEDED"}),0)
-        client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":"Msg":"Job processing finished "}),0)
+        client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":{"Msg":"Job processing finished "}}),0)
     except:
-        client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":"Msg":"Job processing failed! Check device logs for details."}),0)
+        client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":{"Msg":"Job processing failed! Check device logs for details."}}),0)
         print("Job processing failed! Check device logs for details.")
 
 
@@ -184,17 +184,14 @@ if __name__ == "__main__":
     prev_PORT=''
 
     client = mqtt.Client()
-    l="not connected"
     while True:
         if C_STATUS=="Active" and SERVER_TYPE=="aws":
 
             if prev_HOST!=HOST or prev_PORT!=PORT:
                 print("-"*20)
                 print("Server setting")
-
-                client.loop_stop()
-                client.disconnect()
-
+                #client.loop_stop()
+                #client.disconnect()
 
                 print("Connecting to cloud...")
                 client.tls_set(root_ca,certfile = public_crt,keyfile = private_key,cert_reqs = ssl.CERT_REQUIRED,tls_version = ssl.PROTOCOL_TLSv1_2,ciphers = None)
@@ -204,13 +201,14 @@ if __name__ == "__main__":
                     client.subscribe(JOB_TOPIC, 0)  #subscibe to the topic
                     client.loop_start()
                     print("-"*20)
-                    l='connected'
                     prev_HOST=HOST
                     prev_PORT=PORT
-                    client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":{"Msg":"Job service started and connected to cloud.","SERVER_TYPE":SERVER_TYPE,"HOST":HOST,"PORT":PORT,"LOG_TOPIC"::LOG_TOPIC}}),0)
+                    #client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":{"Msg":"Job service started and connected to cloud.","SERVER_TYPE":SERVER_TYPE,"HOST":HOST,"PORT":PORT,"LOG_TOPIC":LOG_TOPIC}}),0)
                 except:
                     print("Error in connection!")
+                    pass
         else:
+            time.sleep(0.1)
             #print("C_STATUS not active or server not AWS")
         time.sleep(1)
         #print("Script running! Status: ",l)
