@@ -41,6 +41,8 @@ global PUBFLAG
 global C_STATUS
 global LOG_TOPIC
 global JOB_TOPIC
+global ID
+ID=confData['ID']
 SERVER_TYPE=confData['SERVER_TYPE']
 C_STATUS=confData['C_STATUS']
 HOST=confData['HOST']
@@ -63,6 +65,8 @@ root_ca = '/etc/gateway/certUploads/root.pem'
 public_crt = '/etc/gateway/certUploads/cert.pem.crt'
 private_key = '/etc/gateway/certUploads/key.pem.key'
 
+now=datetime.now()
+time_stamp=now.strftime("%m/%d/%Y, %H:%M:%S")
 def job(client,obj,msg):
     # This callback will only be called for messages with topics that match
     # $aws/things/Test_gateway/jobs/notify-next
@@ -208,8 +212,9 @@ if __name__ == "__main__":
                     prev_HOST=HOST
                     prev_PORT=PORT
                     client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":{"Msg":"Job service started and connected to cloud.","SERVER_TYPE":SERVER_TYPE,"HOST":HOST,"PORT":PORT,"LOG_TOPIC":LOG_TOPIC}}),0)
-                except:
+                except Exception as e:
                     print("Error in connection!")
+                    print(e)
         else:
             time.sleep(0.1)
             #print("C_STATUS not active or server not AWS")

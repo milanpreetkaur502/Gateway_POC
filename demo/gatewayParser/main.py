@@ -41,6 +41,8 @@ global PUBFLAG
 global C_STATUS
 global LOG_TOPIC
 global JOB_TOPIC
+global ID
+ID=confData['ID']
 SERVER_TYPE=confData['SERVER_TYPE']
 C_STATUS=confData['C_STATUS']
 HOST=confData['HOST']
@@ -55,6 +57,9 @@ print("PORT->",PORT)
 print("PUBFLAG->",PUBFLAG)
 print("JOB_TOPIC->",JOB_TOPIC)
 print("LOG_TOPIC->",LOG_TOPIC)
+
+now=datetime.now()
+time_stamp=now.strftime("%m/%d/%Y, %H:%M:%S")
 #--------------------------------------------------------------
 
 mqtt_url = 'a3qvnhplljfvjr-ats.iot.us-west-2.amazonaws.com' #url from aws
@@ -206,7 +211,7 @@ if __name__ == "__main__":
                     client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":{"Msg":"Job service started and connected to cloud.","SERVER_TYPE":SERVER_TYPE,"HOST":HOST,"PORT":PORT,"LOG_TOPIC":LOG_TOPIC}}),0)
                 except:
                     print("Error in connection!")
-                    pass
+
         else:
             time.sleep(0.1)
             #print("C_STATUS not active or server not AWS")
