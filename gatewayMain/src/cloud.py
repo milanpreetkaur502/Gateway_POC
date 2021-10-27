@@ -160,6 +160,7 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGF
 
         except requests.ConnectionError as ex:
             print("Connection Lost! Please wait for some time...")
+            print(ex)
             return False
     else:
         #print("waiting...")

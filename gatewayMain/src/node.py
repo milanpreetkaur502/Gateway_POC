@@ -84,17 +84,18 @@ def app_node(SCAN_TIME):
 
     #BLE Section
     bt=subprocess.check_output(['hciconfig'])#check for bluetooth status
+    payload=[]
     if b'UP' in bt:
         BT_STATUS='Active'
     else:
         BT_STATUS='Inactive'
         print('BLE not active')
+
     if BT_STATUS=='Active':
         #lescan=Scanner(0)
         #devices=lescan.scan(int(SCAN_TIME))
         c = Scanner()
         devices=c.scan(SCAN_TIME, passive=True)
-        payload=[]
         devacc=0
         devtemp=0
         devcount=0
@@ -133,7 +134,7 @@ def app_node(SCAN_TIME):
         print('temperature device count ',devtemp)
         SCAN_STATUS='Inactive'
         return payload,BT_STATUS
-
+    return payload,BT_STATUS
 
 '''
 payload.update({desc:value})
