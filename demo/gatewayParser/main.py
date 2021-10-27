@@ -190,8 +190,8 @@ if __name__ == "__main__":
             if prev_HOST!=HOST or prev_PORT!=PORT:
                 print("-"*20)
                 print("Server setting")
-                #client.loop_stop()
-                #client.disconnect()
+                client.loop_stop()
+                client.disconnect()
 
                 print("Connecting to cloud...")
                 client.tls_set(root_ca,certfile = public_crt,keyfile = private_key,cert_reqs = ssl.CERT_REQUIRED,tls_version = ssl.PROTOCOL_TLSv1_2,ciphers = None)
@@ -203,7 +203,7 @@ if __name__ == "__main__":
                     print("-"*20)
                     prev_HOST=HOST
                     prev_PORT=PORT
-                    #client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":{"Msg":"Job service started and connected to cloud.","SERVER_TYPE":SERVER_TYPE,"HOST":HOST,"PORT":PORT,"LOG_TOPIC":LOG_TOPIC}}),0)
+                    client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"Job","Log":{"Msg":"Job service started and connected to cloud.","SERVER_TYPE":SERVER_TYPE,"HOST":HOST,"PORT":PORT,"LOG_TOPIC":LOG_TOPIC}}),0)
                 except:
                     print("Error in connection!")
                     pass
