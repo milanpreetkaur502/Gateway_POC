@@ -101,7 +101,8 @@ def funInitilise(client,SERVER_TYPE,HOST,PORT):
             print("Connection failed! Please try again...")
 
 def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGFLAG):
-    topic=t
+    topic=t cat
+
     if SERVER_TYPE == 'custom':
         topic = 'Msg'
         #"thing/1100/data"
@@ -144,7 +145,10 @@ def publishData(client, dt,t,pubflag,mainBuffer,SERVER_TYPE,STORAGEFLAG,LOGGINGF
 
         #Internet connection handling along with publishing data
         try:
-            requests.head('http://www.google.com/', timeout=3)
+
+            istate=os.popen('connmanctl state').read().split('/n')[0]
+            if 'online' not in istate:
+                return false
             data=json.dumps(msg)
             if sensorType=='Accelerometer':
                 topic=topic+'/acc'
