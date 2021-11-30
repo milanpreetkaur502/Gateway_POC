@@ -150,7 +150,9 @@ def parse(jobconfig,client):
         if jobconfig['execution']['jobdocument']['gateway']['enable']=='active':
             if jobconfig['execution']['jobdocument']['gateway']['operation']=='write':
                 if jobconfig['execution']['jobdocument']['gateway']['scanWindow']!="":
-                    confObject.updateData("node",{"SCAN_RATE":jobconfig['execution']['jobdocument']['gateway']['scanWindow']})
+                    confObject.updateData("node",{"SCAN_TIME":jobconfig['execution']['jobdocument']['gateway']['scanWindow']})
+                if jobconfig['execution']['jobdocument']['gateway']['scanTime']!="":
+                    confObject.updateData("node",{"SCAN_RATE":jobconfig['execution']['jobdocument']['gateway']['scanTime']})
                 if jobconfig['execution']['jobdocument']['gateway']['deviceName']!="":
                     confObject.updateData("device",{'NAME':jobconfig['execution']['jobdocument']['gateway']['deviceName']})
                 if jobconfig['execution']['jobdocument']['gateway']['deviceId']!="":

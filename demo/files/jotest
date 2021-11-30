@@ -36,6 +36,7 @@
                 "enable":"active",
                 "operation":"write",
                 "scanWindow":"5",
+                "scanTime":"10",
                 "deviceName":"AwadhGateway",
                 "deviceId":"1234567891011",
                 "deviceLocation":"IIT Ropar",

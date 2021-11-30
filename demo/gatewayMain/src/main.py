@@ -57,6 +57,7 @@ def dbMaster():
 def nodeMaster():
     print("NODE STARTED")
     global SCAN_TIME
+    global SCAN_RATE
     while True:
 
         if C_STATUS=='Active' and N_STATUS=='Active':
@@ -67,22 +68,28 @@ def nodeMaster():
                 if payl!=[]:
 
                     q.append(payl)
+                    nobeac=1
+                    blefail=1
                     #print(len(q))
                 elif payl==[] and bt_status=="Active":
                     now=datetime.now()
                     time_stamp=now.strftime("%m/%d/%Y, %H:%M:%S")
-                    client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"App","Log":{"Msg":"No active beacons found"}}),0)
+                    if nobeac==1:
+                        client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"App","Log":{"Msg":"No active beacons found"}}),0)
+                    nobeac=0
                     #print("no beacons")
                 elif bt_status=="Inactive":
 
                     #print('ble failure')
                     now=datetime.now()
                     time_stamp=now.strftime("%m/%d/%Y, %H:%M:%S")
-                    client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"App","Log":{"Msg":"BLE not active"}}),0)
+                    if blefail==1:
+                        client.publish(LOG_TOPIC, json.dumps({ "Timestamp" : time_stamp,"DeviceID":ID,"Source":"App","Log":{"Msg":"BLE not active"}}),0)
+                    blefail=0
             except Exception as e:
                 print(e)
                 time.sleep(1)
-        time.sleep(1)
+        time.sleep(int(SCAN_RATE))
 
 #def main():
 
@@ -104,6 +111,7 @@ if __name__=='__main__':
     global C_STATUS
     global BT_STATUS
     global SCAN_TIME
+    global SCAN_RATE
     global SERVER_TYPE
     global PUBLISH_TOPIC
     global PUBFLAG
@@ -120,6 +128,7 @@ if __name__=='__main__':
     PUBFLAG=confData['PUBFLAG']
     N_STATUS=confData['N_STATUS']
     SCAN_TIME=confData['SCAN_TIME']
+    SCAN_RATE=confData['SCAN_RATE']
     STORAGEFLAG=confData['STORAGEFLAG']
     LOGGINGFLAG=confData['LOGGINGFLAG']
     LOG_TOPIC=confData['LOG_TOPIC']
@@ -133,6 +142,7 @@ if __name__=='__main__':
     print("PUBFLAG->",PUBFLAG)
     print("N_STATUS->",N_STATUS)
     print("SCAN_TIME->",SCAN_TIME)
+    print("SCAN_RATE->",SCAN_RATE)
     print("LOGGINGFLAG->",LOGGINGFLAG)
     print("STORAGEFLAG->",STORAGEFLAG)
 
